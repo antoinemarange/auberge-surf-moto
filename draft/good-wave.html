@@ -1,0 +1,618 @@
+<title>Good Wave Tamraght</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --chaux: #EDEEEB;
+    --encre: #141414;
+    --atlantique: #1E3A44;
+    --piste: #B8A583;
+    --argan: #4A4632;
+    --taxi: #F26A1B;
+
+    --display: 'Archivo', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+    --mono: 'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    --gutter: 16px;
+    --max: 1200px;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--chaux);
+    color: var(--encre);
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 100;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  a { color: inherit; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :focus-visible { outline: 3px solid var(--taxi); outline-offset: 3px; }
+
+  .wrap {
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  h1, h2, h3 { margin: 0; text-wrap: balance; }
+
+  .display {
+    font-family: var(--display);
+    font-weight: 900;
+    font-variation-settings: 'wdth' 62;
+    text-transform: uppercase;
+    line-height: .82;
+    letter-spacing: -.01em;
+  }
+
+  .todo {
+    font-family: var(--mono);
+    font-size: .8125rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: .1em .35em;
+    outline: 1px dashed currentColor;
+    outline-offset: -1px;
+    opacity: .85;
+  }
+
+  /* ---------- Hero : vidéo seule ---------- */
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--chaux);
+    background: var(--atlantique) url("media/hero-poster.jpg") center / cover no-repeat;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(20 20 20 / .5) 0%, rgb(20 20 20 / 0) 18%, rgb(20 20 20 / .4) 50%, rgb(20 20 20 / 0) 82%);
+  }
+  .hero__content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 40px;
+    padding-block: 64px;
+  }
+  .hero__title {
+    font-size: clamp(1.75rem, 4.6vw, 3.25rem);
+    font-weight: 800;
+    font-variation-settings: 'wdth' 78;
+    line-height: 1.05;
+    max-width: 18ch;
+  }
+
+  .top {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 1;
+  }
+  .top .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: calc(14px + env(safe-area-inset-top, 0px)) 14px;
+  }
+  .logo {
+    font-weight: 900;
+    font-variation-settings: 'wdth' 75;
+    text-transform: uppercase;
+    font-size: 1.125rem;
+    letter-spacing: .01em;
+    text-decoration: none;
+  }
+  .top nav { display: flex; gap: clamp(10px, 3vw, 22px); font-family: var(--mono); font-size: .8125rem; }
+  .top nav a { text-decoration: none; }
+  .top nav a:hover { text-decoration: underline; }
+  .hero__pause {
+    position: absolute;
+    top: calc(62px + env(safe-area-inset-top, 0px));
+    right: var(--gutter);
+    font: 400 .75rem var(--mono);
+    color: var(--chaux);
+    background: rgb(20 20 20 / .45);
+    border: 1px solid currentColor;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--taxi);
+    color: var(--encre);
+    font-weight: 800;
+    font-variation-settings: 'wdth' 90;
+    font-size: 1.0625rem;
+    padding: 14px 20px;
+    text-decoration: none;
+  }
+  .btn-wa svg { width: 20px; height: 20px; flex: none; }
+  .btn-wa:hover { background: #ff7a2c; }
+
+  /* ---------- SURF | MOTO, chacun sa photo ---------- */
+  .split { display: grid; }
+  .panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: clamp(300px, 52svh, 480px);
+    padding: 16px var(--gutter) 0;
+    text-decoration: none;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .panel img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -3;
+  }
+  .panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+  .panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--grain);
+    mix-blend-mode: overlay;
+    z-index: -1;
+  }
+  .panel--surf { color: var(--encre); background: var(--atlantique); }
+  .panel--surf::before { background: linear-gradient(180deg, rgb(237 238 235 / 0) 45%, rgb(237 238 235 / .8) 100%); }
+  .panel--moto { color: var(--encre); background: var(--piste); }
+  .panel--moto::before { background: linear-gradient(180deg, rgb(184 165 131 / 0) 45%, rgb(184 165 131 / .8) 100%); }
+  .panel__word {
+    font-size: clamp(7rem, 38vw, 17rem);
+    margin-bottom: -.09em;
+    margin-left: -.04em;
+    transition: font-variation-settings .35s ease;
+  }
+  .panel:hover .panel__word,
+  .panel:focus-visible .panel__word { font-variation-settings: 'wdth' 78; }
+
+  .split__col { display: flex; flex-direction: column; }
+  .split__desc {
+    flex: 1;
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    background: var(--encre);
+    color: var(--chaux);
+    padding: 24px var(--gutter) 32px;
+  }
+  .split__desc p { margin: 0; max-width: 46ch; }
+  .split__desc a {
+    font-family: var(--mono);
+    font-size: .875rem;
+    text-underline-offset: 3px;
+  }
+
+  @media (min-width: 820px) {
+    .split { grid-template-columns: 1fr 1fr; }
+    .split__col + .split__col .split__desc { border-left: 1px solid #3a3a3a; }
+    .split__desc { padding-block: 28px 40px; }
+    .panel { min-height: min(78vh, 720px); }
+    .panel__word { font-size: clamp(8rem, 19vw, 19rem); }
+  }
+
+  /* ---------- Sections activités ---------- */
+  .activity { padding-block: 56px 64px; }
+  .activity--surf { background: var(--atlantique); color: var(--chaux); }
+  .activity--moto { background: var(--piste); color: var(--encre); }
+
+  .activity__head {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .activity__head h2 { font-size: clamp(4.5rem, 20vw, 9rem); }
+  .activity__head p { margin: 0; max-width: 52ch; font-size: 1.125rem; }
+
+  .activity__body { display: grid; gap: 36px; }
+
+  .photo {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    max-width: 100%;
+    display: flex;
+    align-items: flex-end;
+    margin: 0;
+    padding: 14px;
+    font-family: var(--mono);
+    font-size: .75rem;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--grain);
+    mix-blend-mode: overlay;
+    z-index: -1;
+  }
+  .photo--surf { background: linear-gradient(170deg, #587780, #16303a); color: var(--chaux); }
+  .photo--moto { background: linear-gradient(170deg, #d8c7a0, #7d6947); color: var(--encre); }
+  .photo--auberge { background: linear-gradient(170deg, #cfd2cc, #8f8a74); color: var(--encre); aspect-ratio: 3 / 2; }
+
+  /* Fiches techniques */
+  .offres { display: grid; gap: 0; }
+  .offre {
+    border-top: 2px solid currentColor;
+    padding-block: 16px 22px;
+  }
+  .offre:last-child { border-bottom: 2px solid currentColor; }
+  .offre h3 {
+    font-size: 1.625rem;
+    font-weight: 800;
+    font-variation-settings: 'wdth' 80;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .offre dl { margin: 0; display: grid; gap: 0; }
+  .offre dl > div {
+    display: grid;
+    grid-template-columns: 8.5ch 1fr;
+    gap: 12px;
+    padding-block: 7px;
+    border-top: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    font-family: var(--mono);
+    font-size: .875rem;
+    line-height: 1.45;
+  }
+  .offre dt { opacity: .7; }
+  .offre dd { margin: 0; }
+  .offres__note { margin: 20px 0 0; font-size: .9375rem; max-width: 48ch; }
+
+  @media (min-width: 900px) {
+    .activity { padding-block: 88px 96px; }
+    .activity__body { grid-template-columns: 5fr 7fr; gap: 56px; align-items: start; }
+    .activity--moto .activity__body { grid-template-columns: 7fr 5fr; }
+    .activity--moto .photo { order: 2; }
+    .photo { position: sticky; top: 24px; }
+  }
+
+  /* ---------- Comment ça marche ---------- */
+  .steps { padding-block: 64px; }
+  .steps h2 { font-size: clamp(2.5rem, 9vw, 4.5rem); margin-bottom: 32px; }
+  .steps ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 24px;
+    counter-reset: step;
+  }
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: baseline;
+    border-top: 2px solid var(--encre);
+    padding-top: 12px;
+    font-size: 1.1875rem;
+    font-weight: 600;
+    font-variation-settings: 'wdth' 90;
+  }
+  .steps li::before {
+    content: counter(step);
+    font-weight: 900;
+    font-variation-settings: 'wdth' 62;
+    font-size: 3.5rem;
+    line-height: .8;
+  }
+  @media (min-width: 820px) {
+    .steps ol { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  }
+
+  /* ---------- Auberge ---------- */
+  .auberge { border-top: 2px solid var(--encre); padding-block: 56px 64px; }
+  .auberge .wrap { display: grid; gap: 28px; }
+  .auberge h2 { font-size: clamp(2.5rem, 9vw, 4.5rem); }
+  .auberge p { margin: 0 0 16px; max-width: 48ch; color: var(--argan); font-size: 1.125rem; }
+  .auberge .lien { font-weight: 700; color: var(--encre); }
+  @media (min-width: 820px) {
+    .auberge .wrap { grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  }
+
+  /* ---------- Infos ---------- */
+  .infos { background: var(--encre); color: var(--chaux); padding-block: 56px 48px; }
+  .infos h2 { font-size: clamp(2.5rem, 9vw, 4.5rem); margin-bottom: 28px; }
+  .infos dl { margin: 0; display: grid; gap: 0; }
+  .infos dl > div {
+    display: grid;
+    grid-template-columns: 11ch 1fr;
+    gap: 12px;
+    padding-block: 12px;
+    border-top: 1px solid #3a3a3a;
+    font-family: var(--mono);
+    font-size: .9375rem;
+  }
+  .infos dt { opacity: .6; }
+  .infos dd { margin: 0; overflow-wrap: anywhere; }
+  .infos .avis {
+    margin: 36px 0 0;
+    font-size: clamp(1.25rem, 4vw, 1.625rem);
+    font-weight: 600;
+    font-variation-settings: 'wdth' 88;
+    max-width: 30ch;
+    line-height: 1.2;
+  }
+  .infos .avis span { display: block; font-family: var(--mono); font-size: .8125rem; font-weight: 400; opacity: .7; margin-top: 8px; }
+  .foot { margin-top: 48px; font-family: var(--mono); font-size: .75rem; opacity: .55; }
+  @media (min-width: 820px) {
+    .infos .wrap { display: grid; grid-template-columns: 7fr 5fr; gap: 56px; align-items: start; }
+    .infos .avis { margin-top: 84px; }
+    .foot { grid-column: 1 / -1; }
+  }
+
+  /* ---------- Barre WhatsApp collante ---------- */
+  .wa-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 10;
+    padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--encre);
+  }
+  .wa-bar .btn-wa { width: 100%; justify-content: center; }
+  .wa-bar.is-cache { visibility: hidden; }
+  @media (min-width: 820px) {
+    body { padding-bottom: 0; }
+    .wa-bar { inset: auto 24px 24px auto; padding: 0; background: none; }
+    .wa-bar .btn-wa { width: auto; box-shadow: 0 0 0 3px var(--encre); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<section class="hero" id="top">
+  <video class="hero__video" id="hero-video" muted loop playsinline preload="metadata" poster="media/hero-poster.jpg" aria-hidden="true">
+    <source src="media/hero.mp4" type="video/mp4">
+  </video>
+  <header class="top">
+    <div class="wrap">
+      <a class="logo" href="#top">Good Wave</a>
+      <nav aria-label="Sections">
+        <a href="#surf">surf</a>
+        <a href="#moto">moto</a>
+        <a href="#auberge">dormir</a>
+        <a href="#infos">infos</a>
+      </nav>
+    </div>
+  </header>
+  <button class="hero__pause" id="hero-pause" type="button" hidden>pause</button>
+  <div class="hero__content wrap">
+    <h1 class="hero__title">Surf et moto à Tamraght, où que vous dormiez.</h1>
+    <a class="btn-wa" href="#infos">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3Z"/></svg>
+      Réserver sur WhatsApp
+    </a>
+  </div>
+</section>
+
+<section class="split" aria-label="Surf ou moto">
+  <div class="split__col">
+    <a class="panel panel--surf" href="#surf">
+      <img src="media/surf-large.jpg" width="1380" height="800" alt="" style="object-position: 55% center">
+      <span class="display panel__word">Surf</span>
+    </a>
+    <div class="split__desc">
+      <p>Jamais surfé ? On vous apprend les bases : sécurité, lecture des conditions, matériel, premiers take-off. Nos moniteurs vous suivent à votre rythme.</p>
+      <p>Déjà autonome ? Chaque jour, on vous emmène sur le spot qui colle aux conditions et à votre niveau. Anchor Point, Banana Point et Anza sont juste à côté.</p>
+      <a href="#surf">Voir les offres surf →</a>
+    </div>
+  </div>
+  <div class="split__col">
+    <a class="panel panel--moto" href="#moto">
+      <img src="media/moto.jpg" width="1000" height="1250" alt="" style="object-position: center 62%">
+      <span class="display panel__word">Moto</span>
+    </a>
+    <div class="split__desc">
+      <p><span class="todo">[À COMPLÉTER : le site actuel ne parle pas de la moto. 2 ou 3 phrases : type de sortie, terrain, niveau requis, pick-up à l'hôtel ?]</span></p>
+      <a href="#moto">Voir les sorties moto →</a>
+    </div>
+  </div>
+</section>
+<main>
+  <section class="activity activity--surf" id="surf">
+    <div class="wrap">
+      <div class="activity__head">
+        <h2 class="display">Surf</h2>
+        <p>Anchor Point, Banana Point, Anza. On choisit le spot selon les conditions du jour, vous surfez.</p>
+      </div>
+      <div class="activity__body">
+        <figure class="photo photo--surf"><img src="media/surf.jpg" width="640" height="800" alt="Un surfeur file sur une vague verte, l'écume dans son dos." loading="lazy" style="object-position: 55% center"></figure>
+        <div>
+          <div class="offres">
+            <article class="offre">
+              <h3>Cours débutant</h3>
+              <dl>
+                <div><dt>niveau</dt><dd>Jamais surfé</dd></div>
+                <div><dt>au menu</dt><dd>Sécurité, lecture des vagues, matériel, premiers take-off</dd></div>
+                <div><dt>durée</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+                <div><dt>prix</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+                <div><dt>inclus</dt><dd><span class="todo">[À COMPLÉTER : planche, combi, transport ?]</span></dd></div>
+              </dl>
+            </article>
+            <article class="offre">
+              <h3>Surf guiding</h3>
+              <dl>
+                <div><dt>niveau</dt><dd>Intermédiaire à confirmé</dd></div>
+                <div><dt>au menu</dt><dd>Le bon spot au bon moment, selon houle et marée</dd></div>
+                <div><dt>durée</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+                <div><dt>prix</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+                <div><dt>inclus</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              </dl>
+            </article>
+            <article class="offre">
+              <h3>Surf &amp; yoga</h3>
+              <dl>
+                <div><dt>niveau</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+                <div><dt>au menu</dt><dd>Cours de surf et séance de yoga chaque jour</dd></div>
+                <div><dt>durée</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+                <div><dt>prix</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+                <div><dt>inclus</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              </dl>
+            </article>
+          </div>
+          <p class="offres__note">Kite et wingfoil aussi. Écrivez-nous.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="activity activity--moto" id="moto">
+    <div class="wrap">
+      <div class="activity__head">
+        <h2 class="display">Moto</h2>
+        <p><span class="todo">[À COMPLÉTER : 2 phrases — type de moto, terrain, pour qui]</span></p>
+      </div>
+      <div class="activity__body">
+        <figure class="photo photo--moto"><img src="media/moto.jpg" width="1000" height="1250" alt="Un pilote sur une KTM enduro orange devant une maison aux portes bleues." loading="lazy"></figure>
+        <div class="offres">
+          <article class="offre">
+            <h3><span class="todo">[À COMPLÉTER : sortie 1]</span></h3>
+            <dl>
+              <div><dt>durée</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              <div><dt>niveau</dt><dd><span class="todo">[À COMPLÉTER : permis requis ?]</span></dd></div>
+              <div><dt>prix</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              <div><dt>inclus</dt><dd><span class="todo">[À COMPLÉTER : moto, casque, équipement, guide, essence]</span></dd></div>
+              <div><dt>pick-up</dt><dd><span class="todo">[À COMPLÉTER : à votre hôtel ? quelle zone ?]</span></dd></div>
+            </dl>
+          </article>
+          <article class="offre">
+            <h3><span class="todo">[À COMPLÉTER : sortie 2]</span></h3>
+            <dl>
+              <div><dt>durée</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              <div><dt>niveau</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              <div><dt>prix</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              <div><dt>inclus</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+              <div><dt>pick-up</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps" id="comment">
+    <div class="wrap">
+      <h2 class="display">Comment ça marche</h2>
+      <ol>
+        <li>Vous nous écrivez sur WhatsApp.</li>
+        <li><span class="todo">[À COMPLÉTER : on vient vous chercher à votre hôtel ?]</span></li>
+        <li><span class="todo">[À COMPLÉTER : vous surfez / vous roulez]</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="auberge" id="auberge">
+    <div class="wrap">
+      <div>
+        <h2 class="display">Et pour dormir ?</h2>
+        <p style="margin-top:18px">Une maison berbère avec chambres doubles et dortoirs. Un rooftop face à l'océan. La cuisine de Jamila.</p>
+        <p>Prix : <span class="todo">[À COMPLÉTER]</span></p>
+        <a class="lien" href="#infos">Demander une chambre sur WhatsApp →</a>
+      </div>
+      <div class="photo photo--auberge">[PHOTO : rooftop au coucher du soleil]</div>
+    </div>
+  </section>
+
+  <section class="infos" id="infos">
+    <div class="wrap">
+      <div>
+        <h2 class="display">Infos</h2>
+        <dl>
+          <div><dt>whatsapp</dt><dd><span class="todo">[À COMPLÉTER : numéro]</span></dd></div>
+          <div><dt>adresse</dt><dd>Tamraght, Maroc · <span class="todo">[À COMPLÉTER : adresse précise]</span></dd></div>
+          <div><dt>carte</dt><dd><a href="https://www.google.com/maps/search/Good+Wave+Surf+House+Tamraght">Ouvrir dans Google Maps</a></dd></div>
+          <div><dt>horaires</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+          <div><dt>instagram</dt><dd><span class="todo">[À COMPLÉTER]</span></dd></div>
+          <div><dt>langues</dt><dd>Français, English, Español</dd></div>
+        </dl>
+      </div>
+      <p class="avis">5,0 sur Google, 153 avis. <span><span class="todo">[À COMPLÉTER : une vraie citation client, avec prénom]</span></span></p>
+      <p class="foot">Good Wave · Tamraght · brouillon v1</p>
+    </div>
+  </section>
+</main>
+
+<div class="wa-bar">
+  <a class="btn-wa" href="#infos">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3Z"/></svg>
+    Réserver sur WhatsApp
+  </a>
+</div>
+
+<script>
+  (() => {
+    const v = document.getElementById('hero-video');
+    const b = document.getElementById('hero-pause');
+    if (!v || !b) return;
+    const calme = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    b.hidden = false;
+    const maj = () => { b.textContent = v.paused ? 'lecture' : 'pause'; };
+    if (!calme) v.play().catch(() => {}).finally(maj); else maj();
+    v.addEventListener('play', maj);
+    v.addEventListener('pause', maj);
+    b.addEventListener('click', () => { v.paused ? v.play() : v.pause(); });
+  })();
+
+  // Le bouton WhatsApp collant se cache tant que celui du hero est visible
+  (() => {
+    const bar = document.querySelector('.wa-bar');
+    const heroBtn = document.querySelector('.hero .btn-wa');
+    if (!bar || !heroBtn || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(([e]) => bar.classList.toggle('is-cache', e.isIntersecting))
+      .observe(heroBtn);
+  })();
+</script>

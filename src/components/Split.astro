@@ -1,0 +1,177 @@
+---
+// SURF | MOTO : le truc mémorable. Deux cartes arrondies, empilées sur mobile, 50/50 sur ordi.
+import { Image } from 'astro:assets';
+import Picto from './Picto.astro';
+import surfPhoto from '../../assets/photos/surf/surf-silhouette.jpg';
+import motoPhoto from '../../assets/photos/moto/moto-silhouette.jpg';
+---
+
+<section class="split" aria-label="Surf ou moto">
+  <div class="split__col">
+    <a class="panel panel--surf" href="/surf">
+      <Image
+        src={surfPhoto}
+        alt="Silhouette d'une surfeuse, planche sous le bras, sur le sable ridé face à l'océan."
+        widths={[640, 960, 1536]}
+        sizes="(min-width: 820px) 50vw, 100vw"
+        style="object-position: 50% 45%"
+      />
+      <span class="panel__picto"><Picto nom="vague" taille={40} /></span>
+      <span class="panel__coin legende">[01]<br />Anchor · Banana · Anza</span>
+      <span class="display panel__word">Surf</span>
+    </a>
+    <div class="split__desc">
+      <p>Jamais surfé ? On vous apprend les bases : sécurité, lecture des conditions, matériel, premiers take-off. Nos moniteurs vous suivent à votre rythme.</p>
+      <p>Déjà autonome ? Chaque jour, on vous emmène sur le spot qui colle aux conditions et à votre niveau. Anchor Point, Banana Point et Anza sont juste à côté.</p>
+      <a class="offres" href="/surf"><span>voir les offres</span><span class="offres__fleche" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+  <div class="split__col">
+    <a class="panel panel--moto" href="/moto">
+      <Image
+        src={motoPhoto}
+        alt="Silhouette d'un pilote en moto enduro sur une dune de sable rouge."
+        widths={[640, 960, 1536]}
+        sizes="(min-width: 820px) 50vw, 100vw"
+        style="object-position: 50% 45%"
+      />
+      <span class="panel__picto"><Picto nom="moto" taille={40} /></span>
+      <span class="panel__coin legende">[02]<br />Collines · Dunes</span>
+      <span class="display panel__word">Moto</span>
+    </a>
+    <div class="split__desc">
+      <p>Vous savez déjà piloter ? Vous roulez sur des KTM 450 cc enduro. Le guide roule devant et cale l'allure sur la vôtre.</p>
+      <p>On monte dans les montagnes derrière la maison, puis on file vers les plages, les pistes et les dunes. Terre, cailloux, sable : le parcours suit votre niveau.</p>
+      <a class="offres" href="/moto"><span>voir les offres</span><span class="offres__fleche" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .split {
+    display: grid;
+    gap: 8px;
+    margin-inline: 8px;
+  }
+
+  .split__col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: clamp(300px, 52svh, 480px);
+    padding: 16px var(--gutter) 0;
+    text-decoration: none;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--grain);
+    mix-blend-mode: overlay;
+  }
+  .panel :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -3;
+  }
+  /* Voile clair en bas : le mot géant noir se détache de la photo */
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+  .panel--surf { color: var(--encre); background: var(--encre); }
+  .panel--surf::before { background: linear-gradient(180deg, rgb(239 231 218 / 0) 55%, rgb(239 231 218 / .3) 100%); }
+  .panel--moto { color: var(--encre); background: var(--terre); }
+  .panel--moto::before { background: linear-gradient(180deg, rgb(239 231 218 / 0) 55%, rgb(239 231 218 / .3) 100%); }
+  .panel__picto {
+    position: absolute;
+    top: 18px;
+    left: var(--gutter);
+    color: var(--encre);
+  }
+
+  .panel__coin {
+    position: absolute;
+    top: 20px;
+    right: var(--gutter);
+    color: var(--encre);
+    text-align: right;
+  }
+
+  .panel__word {
+    font-size: clamp(4rem, 15vw, 15rem); /* même taille que « Tamraght » dans le hero */
+    margin-bottom: -.09em;
+    margin-left: -.04em;
+    transition: font-variation-settings .35s ease;
+  }
+  .panel:hover .panel__word,
+  .panel:focus-visible .panel__word { font-variation-settings: 'wdth' 70; }
+
+  .split__desc {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--encre);
+    color: var(--chaux);
+    padding: 24px var(--gutter) 32px;
+  }
+  .split__desc p {
+    margin: 0;
+    max-width: 52ch;
+    font-family: var(--font-mono);
+    font-size: .875rem;
+    line-height: 1.6;
+  }
+  /* Bouton en bas à droite de chaque carte, dans la DA des fiches : filet fin,
+     coins arrondis, pas de fond, mono. Au survol le filet s'affirme
+     et la flèche avance. */
+  .offres {
+    margin-top: auto;
+    margin-right: 16px;
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--filet);
+    border-radius: var(--radius);
+    color: var(--chaux);
+    font-family: var(--font-mono);
+    font-size: .875rem;
+    text-decoration: none;
+    transition: border-color .25s ease;
+  }
+  .offres__fleche { transition: transform .25s ease; }
+  .offres:hover,
+  .offres:focus-visible { border-color: currentColor; }
+  .offres:hover .offres__fleche,
+  .offres:focus-visible .offres__fleche { transform: translateX(4px); }
+  .offres:focus-visible { outline: 2px solid var(--chaux); outline-offset: 3px; }
+
+  @media (min-width: 820px) {
+    .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .split__desc { padding-block: 28px 40px; }
+    .panel { min-height: min(78vh, 720px); }
+    .panel__picto { top: 24px; }
+
+  }
+</style>

@@ -1,0 +1,179 @@
+---
+// Hero : vidéo dans une grande carte arrondie, « Tamraght » au centre, WhatsApp dans une encoche en bas à gauche.
+import { WHATSAPP_URL } from '../data/contact';
+---
+
+<section class="hero" id="top">
+  <video
+    class="hero__video"
+    id="hero-video"
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster="/media/hero-poster.jpg"
+    aria-hidden="true"
+  >
+    <source src="/media/hero.mp4" type="video/mp4" />
+  </video>
+
+
+  <div class="hero__centre wrap">
+    <h1 class="hero__titre display">Tamraght</h1>
+    <p class="hero__sous">Surf, moto et une maison berbère face à l’océan.</p>
+  </div>
+  <p class="hero__coin legende">Tamraght, Maroc<br />Surf · Moto · Auberge</p>
+  <a class="hero__cta" href={WHATSAPP_URL}>
+    Réserver sur WhatsApp
+    <span class="hero__fleche" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" /></svg>
+      <svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" /></svg>
+    </span>
+  </a>
+</section>
+
+<script>
+  // La vidéo ne démarre pas si le visiteur a demandé moins d'animations.
+  const v = document.getElementById('hero-video') as HTMLVideoElement | null;
+  if (v && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.play().catch(() => {});
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    margin: 8px;
+    height: calc(100svh - 16px);
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    color: var(--chaux);
+    background: var(--encre) url('/media/hero-poster.jpg') center / cover no-repeat;
+    border-radius: var(--radius);
+    border-bottom-left-radius: 0; /* caché sous l'encoche ; arrondi, il laisserait un liseré */
+    /* Découpe de la carte, débordant de 2px en bas et à gauche : l'encoche peut couvrir le bord
+       de la vidéo, qui sinon reparaît en liseré sombre quand le défilement tombe entre deux pixels. */
+    clip-path: inset(0 0 -2px -2px round var(--radius) var(--radius) var(--radius) 0);
+    isolation: isolate;
+  }
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(20 20 20 / .5) 0%, rgb(20 20 20 / .3) 30%, rgb(20 20 20 / .3) 70%, rgb(20 20 20 / .45) 100%);
+  }
+
+  .hero__centre {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(16px, 2.5vw, 28px);
+    text-align: center;
+  }
+  .hero__titre {
+    font-size: clamp(4rem, 15vw, 15rem);
+    line-height: .8;
+  }
+  .hero__sous {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(.9375rem, 1.4vw, 1.25rem);
+    line-height: 1.6;
+    text-wrap: balance;
+  }
+  /* Légende en bas à droite, face à l'encoche ; sur ordi seulement, l'encoche prend la largeur sur mobile */
+  .hero__coin {
+    display: none;
+    position: absolute;
+    right: clamp(18px, 2.4vw, 36px);
+    bottom: clamp(18px, 2.4vw, 36px);
+    margin: 0;
+    text-align: right;
+  }
+  @media (min-width: 820px) {
+    .hero__coin { display: block; }
+  }
+
+  /* Encoche découpée dans le coin bas gauche de la carte, couleur de la page.
+     Le texte part près du bord gauche, avec le même retrait qu’en haut et en bas ; les deux congés prolongent l'arrondi. */
+  .hero__cta {
+    --r: var(--radius);
+    --deb: 2px; /* déborde de la carte, voir .hero */
+    position: absolute;
+    left: calc(-1 * var(--deb));
+    bottom: calc(-1 * var(--deb));
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(16px, 2vw, 28px);
+    padding: clamp(14px, 1.6vw, 22px) clamp(16px, 2vw, 28px) calc(clamp(14px, 1.6vw, 22px) + var(--deb)) calc(clamp(14px, 1.6vw, 22px) + var(--deb));
+    background: var(--chaux);
+    color: var(--encre);
+    border-top-right-radius: var(--r);
+    font-family: var(--font-mono);
+    font-size: clamp(.9375rem, 1.4vw, 1.25rem);
+    text-decoration: none;
+    animation: encoche .7s cubic-bezier(.2, .8, .2, 1) .4s both;
+  }
+  .hero__cta::before,
+  .hero__cta::after {
+    content: '';
+    position: absolute;
+    width: var(--r);
+    height: var(--r);
+    background: radial-gradient(circle at 100% 0, transparent var(--r), var(--chaux) calc(var(--r) + .5px));
+  }
+  .hero__cta::before { left: var(--deb); bottom: 100%; }
+  .hero__cta::after { left: 100%; bottom: var(--deb); }
+
+  /* Flèche dans une pastille : au survol elle file en haut à droite, une autre arrive d'en bas à gauche. */
+  .hero__fleche {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 1.9em;
+    height: 1.9em;
+    border-radius: 50%;
+    background: var(--terre);
+    overflow: hidden;
+    transition: transform .3s ease;
+  }
+  .hero__fleche svg {
+    grid-area: 1 / 1;
+    width: 55%;
+    height: 55%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .45s cubic-bezier(.7, 0, .2, 1);
+  }
+  .hero__fleche svg + svg { transform: translate(-160%, 160%); }
+  .hero__cta:hover .hero__fleche,
+  .hero__cta:focus-visible .hero__fleche { transform: scale(1.08); }
+  .hero__cta:hover .hero__fleche svg,
+  .hero__cta:focus-visible .hero__fleche svg { transform: translate(160%, -160%); }
+  .hero__cta:hover .hero__fleche svg + svg,
+  .hero__cta:focus-visible .hero__fleche svg + svg { transform: translate(0, 0); }
+
+  @keyframes encoche {
+    from { transform: translateY(100%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__cta { animation: none; }
+    .hero__fleche, .hero__fleche svg { transition: none; }
+  }
+</style>

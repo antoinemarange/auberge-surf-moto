@@ -1,0 +1,134 @@
+---
+// En-tête commun, fixe en haut de l'écran : il se cache quand on descend, revient quand on remonte.
+// `overlay` : transparent sur la vidéo du hero (accueil) tant qu'on est en haut de page.
+import { NAV } from '../data/contact';
+
+interface Props {
+  overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props;
+const chemin = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<header class:list={['entete', { 'entete--overlay': overlay }]} data-entete>
+  <div class="wrap">
+    <a class="logo" href="/">Good Wave Surf House</a>
+    <nav aria-label="Principale">
+      {NAV.map(([href, label]) => (
+        <a href={href} aria-current={chemin === href ? 'page' : undefined}>{label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const entete = document.querySelector<HTMLElement>('[data-entete]');
+  if (entete) {
+    // Hauteur de l'en-tête pour la cale qui le remplace dans la page (Base.astro)
+    const mesurer = () => document.documentElement.style.setProperty('--entete-h', `${entete.offsetHeight}px`);
+    mesurer();
+    new ResizeObserver(mesurer).observe(entete);
+
+    let avant = scrollY;
+    let attente = false;
+    const maj = () => {
+      attente = false;
+      const y = scrollY;
+      if (y < 10) {
+        entete.classList.remove('entete--cache', 'entete--plein');
+      } else if (y > avant + 4 && y > entete.offsetHeight) {
+        entete.classList.add('entete--cache');
+      } else if (y < avant - 4) {
+        entete.classList.remove('entete--cache');
+        entete.classList.add('entete--plein');
+      }
+      avant = y;
+    };
+    addEventListener('scroll', () => {
+      if (!attente) { attente = true; requestAnimationFrame(maj); }
+    }, { passive: true });
+    // Au clavier, un lien du menu qui prend le focus fait revenir l'en-tête
+    entete.addEventListener('focusin', () => entete.classList.remove('entete--cache'));
+  }
+</script>
+
+<style>
+  .entete {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    color: var(--encre);
+    transition:
+      transform .45s cubic-bezier(.2, .8, .2, 1),
+      color .3s ease,
+      inset .3s ease;
+  }
+  /* Fond flouté et translucide sur toute la hauteur de l'en-tête.
+     Visible seulement quand l'en-tête revient en cours de page. */
+  .entete::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--chaux) 72%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    transition: opacity .3s ease;
+    pointer-events: none;
+  }
+  .entete--plein::before { opacity: 1; }
+  /* Accueil, en haut de page : transparent, posé dans la carte vidéo (marge de 8px) */
+  .entete--overlay {
+    inset: 8px 8px auto 8px;
+    color: var(--chaux);
+  }
+  /* Revenu en remontant : collé en haut, texte foncé sur le fond flouté */
+  .entete--overlay.entete--plein {
+    inset: 0 0 auto 0;
+    color: var(--encre);
+  }
+  .entete--cache { transform: translateY(calc(-100% - 8px)); }
+  @media (prefers-reduced-motion: reduce) {
+    .entete { transition: none; }
+  }
+  /* Pleine largeur : logo à gauche, menu à droite. Même marge en haut et sur les côtés. */
+  .wrap {
+    --marge: clamp(16px, 3vw, 40px);
+    max-width: none;
+    padding-inline: var(--marge);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 20px;
+    /* -10px : l’interligne ajoute ~10px autour des capitales ; même marge en haut et en bas */
+    padding-block: calc(var(--marge) - 10px + env(safe-area-inset-top, 0px)) calc(var(--marge) - 10px);
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-variation-settings: 'wdth' 75;
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    letter-spacing: .01em;
+    text-decoration: none;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    font-family: var(--font-mono);
+    font-size: .875rem;
+  }
+  nav a {
+    text-decoration: none;
+    padding-block: 6px;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

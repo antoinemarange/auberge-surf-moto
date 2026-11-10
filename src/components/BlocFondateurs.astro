@@ -1,0 +1,205 @@
+---
+// Accueil : Margot et Youness, les deux personnes derrière Good Wave. Renvoie vers /margot-youness.
+// Margot = l'organisation de la surf house, Youness = les activités, à deux = un combo explosif.
+// La vidéo fait la section : grande carte bord à bord (8px, comme le hero et SURF | MOTO),
+// titre et langues en haut à gauche, logo crew en haut à droite, rôles dans une encoche en bas à gauche,
+// et en bas à droite une simple flèche ronde sur la vidéo, vers la page des fondateurs.
+import Picto from './Picto.astro';
+
+const roles: ['vague' | 'moto' | 'maison', string, string][] = [
+  ['vague', 'Margot', 'l’organisation de la surf house'],
+  ['moto', 'Youness', 'les activités'],
+  ['maison', 'À deux', 'un combo explosif'],
+];
+---
+
+<section class="fondateurs" aria-labelledby="fondateurs-titre">
+  <div class="carte">
+    <video src="/video/margot-youness.mp4" poster="/video/margot-youness.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Margot et Youness devant la maison, à côté du Defender."></video>
+
+    <div class="texte">
+      <h2 class="display" id="fondateurs-titre">Margot & Youness</h2>
+      <p class="langues"><span class="intitule">Langues parlées</span> Français, English, Español, <span lang="ar" dir="rtl">العربية</span></p>
+    </div>
+
+    <span class="coin" aria-hidden="true"><Picto nom="crew" taille={30} /></span>
+
+    <ul class="roles">
+      {roles.map(([picto, qui, quoi]) => (
+        <li><Picto nom={picto} taille={18} /><span class="qui">{qui}</span> {quoi}</li>
+      ))}
+    </ul>
+
+    <a class="fleche" href="/margot-youness" aria-label="Les rencontrer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </a>
+    <span class="arrondi" aria-hidden="true"></span>
+  </div>
+</section>
+
+<style>
+  /* Pas de marge en haut : collée à la carte du Spot (8px), comme le hero à SURF | MOTO */
+  .fondateurs { padding-block: 0; } /* l'écart avec Crews est porté par Crews */
+
+  .carte {
+    --r: var(--radius);
+    --pad: clamp(18px, 2.4vw, 36px);
+    position: relative;
+    margin-inline: 8px;
+    height: min(86svh, 760px);
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: var(--pad) calc(var(--pad) + 60px) var(--pad) var(--pad); /* à droite, la place de l'encoche du logo */
+    /* À gauche, le titre s'aligne sur celui du Spot au-dessus (colonne du site dans une carte à 8px du bord) */
+    padding-top: clamp(48px, 7vw, 112px); /* titre et langues descendus, moins collés au bord haut */
+    padding-left: max(var(--gutter), calc((100% - 16px - var(--max)) / 2 + var(--gutter))); /* 100% = la section ; la carte et le Spot perdent 2 × 8px */
+    color: var(--chaux);
+    background: var(--encre);
+    /* Deux coins sont sous des encoches ; les deux autres (haut gauche, bas droite) sont arrondis
+       par un congé couleur de la page (::before et .arrondi). Ni border-radius sur la vidéo ni découpe : Chrome dessinait
+       des triangles noirs sur la vidéo arrondie. Les encoches débordent de 2px pour couvrir son bord. */
+    isolation: isolate;
+  }
+  video {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% 50%; /* Margot et Youness restent dans le cadre quand la carte passe en portrait */
+  }
+  /* Voile en haut seulement, pour le titre et les langues */
+  .carte::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(20 20 20 / .7) 0%, rgb(20 20 20 / .45) 30%, rgb(20 20 20 / 0) 60%);
+  }
+
+  .carte::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    width: calc(var(--r) + 2px);
+    height: calc(var(--r) + 2px);
+    background: radial-gradient(circle at 100% 100%, transparent var(--r), var(--chaux) calc(var(--r) + .5px));
+  }
+
+  /* Encoche en bas à gauche, couleur de la page : les rôles y sont posés,
+     les deux congés prolongent l'arrondi. Sur mobile, les rôles s'empilent pour laisser
+     la place à « les rencontrer » en bas à droite. */
+  .roles {
+    --deb: 2px;
+    position: absolute;
+    bottom: calc(-1 * var(--deb));
+    left: calc(-1 * var(--deb));
+    max-width: calc(100% - 100px); /* laisse la place à la flèche */
+    list-style: none;
+    margin: 0;
+    padding: 12px clamp(16px, 2vw, 26px) calc(12px + var(--deb)) calc(14px + var(--deb));
+    display: flex;
+    flex-direction: column;
+    gap: 8px 24px;
+    background: var(--chaux);
+    color: var(--encre);
+    border-top-right-radius: var(--r);
+    font-family: var(--font-mono);
+    font-size: .8125rem;
+  }
+  .roles::before,
+  .roles::after {
+    content: '';
+    position: absolute;
+    width: var(--r);
+    height: var(--r);
+    background: radial-gradient(circle at 100% 0, transparent var(--r), var(--chaux) calc(var(--r) + .5px));
+  }
+  .roles::before { left: var(--deb); bottom: 100%; }
+  .roles::after { left: 100%; bottom: var(--deb); }
+  .roles li { display: inline-flex; align-items: center; gap: 8px; }
+  .qui { opacity: .6; }
+
+  /* Encoche en haut à droite, couleur de la page : le picto crew en noir. */
+  .coin {
+    --deb: 2px;
+    position: absolute;
+    top: calc(-1 * var(--deb));
+    right: calc(-1 * var(--deb));
+    display: grid;
+    place-items: center;
+    padding: calc(10px + var(--deb)) calc(10px + var(--deb)) 10px 10px;
+    background: var(--chaux);
+    color: var(--encre);
+    border-bottom-left-radius: var(--r);
+  }
+  .coin::before,
+  .coin::after {
+    content: '';
+    position: absolute;
+    width: var(--r);
+    height: var(--r);
+    background: radial-gradient(circle at 0 100%, transparent var(--r), var(--chaux) calc(var(--r) + .5px));
+  }
+  .coin::before { right: var(--deb); top: 100%; }
+  .coin::after { right: 100%; top: var(--deb); }
+
+  /* Titre et langues en haut à gauche, posés sur la vidéo */
+  .texte { display: grid; gap: clamp(14px, 1.4vw, 20px); } /* titre rogné à la hauteur des capitales : les langues s'y rattachent */
+  h2 { margin: 0; font-size: clamp(2.75rem, 11vw, 5.5rem); text-box: trim-both cap alphabetic; } /* même taille que les titres des autres sections */
+  /* Les langues qu'ils parlent, juste sous le titre */
+  .langues { margin: 0; font-family: var(--font-mono); font-size: clamp(.875rem, 1.2vw, 1.0625rem); }
+  .intitule { margin-right: 10px; color: var(--piste); } /* même typo, couleur sable */
+
+  /* Coin bas droit arrondi : même congé que celui du haut gauche, retourné */
+  .arrondi {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: calc(var(--r) + 2px);
+    height: calc(var(--r) + 2px);
+    background: radial-gradient(circle at 0 0, transparent var(--r), var(--chaux) calc(var(--r) + .5px));
+  }
+
+  /* Flèche ronde sur la vidéo, en bas à droite : mène à la page des fondateurs */
+  .fleche {
+    position: absolute;
+    right: var(--pad);
+    bottom: var(--pad);
+    display: grid;
+    place-items: center;
+    width: clamp(48px, 4.4vw, 64px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--chaux);
+    color: var(--encre);
+    transition: transform .3s ease;
+  }
+  .fleche svg {
+    width: 45%;
+    height: 45%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .3s ease;
+  }
+  .fleche:hover, .fleche:focus-visible { transform: scale(1.08); }
+  .fleche:hover svg, .fleche:focus-visible svg { transform: translateX(3px); }
+  .fleche:focus-visible { outline: 3px solid var(--terre); outline-offset: 3px; }
+
+  @media (min-width: 820px) {
+    /* Sur ordi : 16:9 plafonné à la hauteur d'écran */
+    .carte { height: min(88svh, 56.25vw); }
+    .roles { flex-direction: row; flex-wrap: wrap; padding-top: clamp(14px, 1.6vw, 22px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fleche, .fleche svg { transition: none; }
+  }
+</style>

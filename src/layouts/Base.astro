@@ -1,0 +1,51 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/dm-mono/400.css';
+import '../styles/tokens.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import OngletWhatsApp from '../components/OngletWhatsApp.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'fr' | 'en';
+  /** L'accueil pose l'en-tête, transparent, sur la vidéo du hero : pas de cale sous l'en-tête */
+  enteteDansHero?: boolean;
+}
+
+const { title, description, lang = 'fr', enteteDansHero = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#141414" />
+  </head>
+  <body>
+    <a class="sauter" href="#contenu">Aller au contenu</a>
+    <!-- ScrollSmoother : tout ce qui défile vit dans #smooth-content ; les éléments fixes restent dehors -->
+    <Header overlay={enteteDansHero} />
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        {!enteteDansHero && <div class="entete-cale" aria-hidden="true"></div>}
+        <main id="contenu">
+          <slot />
+        </main>
+        <Footer />
+      </div>
+    </div>
+    <OngletWhatsApp />
+    <script>
+      import './../scripts/defilement';
+    </script>
+    <style>
+      /* L'en-tête est fixe : cette cale garde sa place en haut de page */
+      .entete-cale { height: var(--entete-h, 64px); }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+---
+// Flèches ‹ › et compteur du carrousel (le script de Carrousel.astro les retrouve par leurs classes).
+interface Props {
+  total: number;
+}
+
+const { total } = Astro.props;
+---
+
+<div class="fleches">
+  <button class="prec" type="button" aria-label="Photo précédente" disabled>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+  </button>
+  <span class="compteur" aria-live="polite">1 / {total}</span>
+  <button class="suiv" type="button" aria-label="Photo suivante">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+  </button>
+</div>
+
+<style>
+  .fleches {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  button {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: var(--radius);
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  button:hover:not(:disabled) { background: var(--filet); }
+  button:disabled { opacity: .3; cursor: default; }
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .compteur { min-width: 7ch; text-align: center; font-size: .875rem; }
+</style>

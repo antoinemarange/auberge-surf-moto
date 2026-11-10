@@ -1,0 +1,135 @@
+---
+import Base from '../layouts/Base.astro';
+import TetePage from '../components/TetePage.astro';
+import Photo from '../components/Photo.astro';
+import Picto from '../components/Picto.astro';
+import crewPlage from '../../assets/photos/crews/crew-plage.jpg';
+import Tampon from '../components/Tampon.astro';
+import Appel from '../components/Appel.astro';
+
+// Un picto différent par carte
+const pour: [string, string, 'drapeau' | 'etiquette' | 'planche' | 'van'][] = [
+  ['Clubs et écoles', 'Un club de surf, de skate ou de moto qui part ensemble.', 'drapeau'],
+  ['Marques', 'Une marque qui emmène son équipe, ses riders ou sa communauté.', 'etiquette'],
+  ['Surf houses', 'Une surf house d\'ailleurs qui veut un spot partenaire au Maroc.', 'planche'],
+  ['Bandes de potes', 'Une semaine entre amis, ou juste l\'envie de partir à plusieurs.', 'van'],
+];
+---
+
+<Base
+  title="Venir en crew — Good Wave"
+  description="Séjours surf et moto pour les groupes, les clubs, les marques et les surf houses à Tamraght."
+>
+  <TetePage titre="Crews" theme="crews">
+    <p>Vous venez à plusieurs ? On organise tout le séjour du groupe : surf, moto, repas et maison.</p>
+  </TetePage>
+
+  <!-- Pour qui à gauche, ce qu'on propose à droite -->
+  <section class="bloc pour-qui">
+    <div class="wrap duo">
+      <h2 class="display">Pour qui</h2>
+      <ul class="pour">
+        {pour.map(([titre, texte, picto]) => (
+          <li>
+            <Picto nom={picto} taille={32} />
+            <h3>{titre}</h3>
+            <p>{texte}</p>
+          </li>
+        ))}
+      </ul>
+      <div class="propose">
+        <ul class="liste">
+          <li>Un programme sur mesure : surf, moto, yoga, sorties.</li>
+          <li>La maison pour le groupe <span class="todo">[À COMPLÉTER : capacité, privatisation possible ?]</span></li>
+          <li>Les repas ensemble, cuisinés par Jamila.</li>
+          <li>Remise groupe <span class="todo">[À COMPLÉTER : à partir de combien ? quel % ?]</span></li>
+        </ul>
+        <Tampon texte="Crew ✺ Surf ✺ Moto ✺ Good Wave ✺ " taille={180} />
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc recit">
+    <div class="wrap grille">
+      <Photo src={crewPlage} alt="Le crew au complet sur la plage, une vingtaine de surfeurs autour d'un 4x4 blanc, pouces levés." ratio="4 / 3" position="center 58%" />
+      <div class="texte">
+        <h2 class="display">Ils sont venus</h2>
+        <p><span class="todo">[À COMPLÉTER : récit du crew de 13 venu de Barcelone, avec l'accord de la marque pour la citer, une citation et une photo]</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc partenaires">
+    <div class="wrap">
+      <h2 class="display">Partenaires</h2>
+      <p class="chapeau">Vous avez une surf house, une marque ou un club ? Parlons d'un partenariat.</p>
+      <div class="logos">
+        <span>[LOGO]</span><span>[LOGO]</span><span>[LOGO]</span><span>[LOGO]</span>
+      </div>
+    </div>
+  </section>
+
+  <Appel titre="On organise votre séjour ?" label="Organiser un séjour crew" compact />
+</Base>
+
+<style>
+  .pour {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .pour li {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 20px;
+    border: 1.5px solid var(--filet);
+    border-radius: var(--radius);
+  }
+  .pour h3 { font-size: 1.5rem; font-weight: 800; font-variation-settings: 'wdth' 78; line-height: 1.1; }
+  .pour p { margin: 0; }
+
+  /* Sections sans filet, marges resserrées : 96px d'une section à l'autre */
+  .bloc { padding-block: 48px; }
+  .bloc.pour-qui { padding-top: 96px; } /* sous le bandeau, comme les autres pages */
+  .duo { display: grid; gap: 32px; }
+  .duo h2 { margin-bottom: 0; }
+  .propose { display: grid; gap: 40px; justify-items: start; }
+  .propose .liste { justify-self: stretch; }
+  .grille { display: grid; gap: 40px; align-items: center; }
+  .texte { display: grid; gap: 16px; }
+  .texte h2 { margin-bottom: 0; }
+  .texte p { margin: 0; max-width: 46ch; font-size: .9375rem; }
+  .liste { list-style: none; margin: 0; padding: 0; max-width: 52ch; }
+  .liste li { padding-block: 12px; border-top: 1px solid var(--filet); font-size: .9375rem; }
+  .liste li:last-child { border-bottom: 1px solid var(--filet); }
+
+  .chapeau { margin: -12px 0 28px; max-width: 44ch; font-size: .9375rem; }
+  .logos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .logos span {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 3 / 2;
+    border: 1.5px dashed var(--filet);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: .8125rem;
+    opacity: .7;
+  }
+
+  @media (min-width: 640px) {
+    .pour { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 900px) {
+    /* Titre au-dessus des cartes (2 × 2) ; la liste démarre à la hauteur des cartes. */
+    .duo { grid-template-columns: 1fr 1fr; column-gap: 64px; }
+    .duo h2 { grid-column: 1; }
+    .pour { grid-column: 1; }
+    .propose { grid-column: 2; grid-row: 2; align-content: start; }
+    .grille { grid-template-columns: 1fr auto; gap: 64px; }
+    .recit .grille { grid-template-columns: 1fr 1fr; }
+    .logos { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

@@ -1,0 +1,134 @@
+/* Palette et typo validées — voir docs/DESIGN.md */
+:root {
+  /* Deux couleurs prises au mur terracotta et au noir,
+     sur un fond crème de papier photo. */
+  --chaux: #EFE7DA; /* crème, fond principal */
+  --encre: #141414; /* noir : texte, blocs sombres, footer */
+  --piste: #B49A7A; /* sable chaud */
+  --argan: #4A3F33; /* brun, texte secondaire */
+  --terre: #D2553C; /* terracotta des murs : WhatsApp et carte Moto uniquement */
+
+  --font-display: 'Archivo Variable', 'Arial Narrow', sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+
+  --gutter: 16px;
+  --max: 1200px;
+  --radius: 20px;
+  --filet: color-mix(in srgb, currentColor 22%, transparent);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--chaux);
+  color: var(--encre);
+  font-family: var(--font-mono);
+  font-size: .9375rem;
+  line-height: 1.6;
+}
+
+/* Texte courant en DM Mono ; titres, boutons et accroches en Archivo */
+h1, h2, h3, .display, .accroche, button { font-family: var(--font-display); }
+
+img { display: block; max-width: 100%; height: auto; }
+
+a { color: inherit; }
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+
+.wrap {
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Titres condensés Black */
+.display {
+  font-weight: 900;
+  font-variation-settings: 'wdth' 62;
+  text-transform: uppercase;
+  line-height: .82;
+  letter-spacing: -.01em;
+}
+
+/* Grain de pellicule sur toute la page : photos, vidéos et aplats prennent le même tirage.
+   Calque fixe, ne capte pas la souris. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-image: var(--grain);
+  mix-blend-mode: overlay;
+  opacity: .45;
+  pointer-events: none;
+}
+
+/* Petite légende en capitales, posée sur les photos comme dans un magazine */
+.legende {
+  font-family: var(--font-mono);
+  font-size: .6875rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* Lien d'évitement clavier */
+.sauter {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 100;
+  background: var(--encre);
+  color: var(--chaux);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+}
+.sauter:focus { top: 12px; }
+
+/* Bloc de section standard */
+.bloc { padding-block: 64px 72px; }
+.bloc h2 { font-size: clamp(2.75rem, 11vw, 5.5rem); margin-bottom: 32px; }
+@media (min-width: 820px) {
+  .bloc { padding-block: 96px; }
+}
+
+/* Lien texte mono */
+.lien {
+  font-family: var(--font-mono);
+  font-size: .875rem;
+  text-underline-offset: 4px;
+}
+
+/* Placeholder visible [À COMPLÉTER] */
+.todo {
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: .1em .35em;
+  outline: 1px dashed currentColor;
+  outline-offset: -1px;
+  opacity: .85;
+}
+
+:focus-visible {
+  outline: 3px solid var(--terre);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Défilement lissé actif : le sticky natif est remplacé par un épinglage GSAP */
+.lisse [data-colle] { position: relative !important; top: auto !important; }

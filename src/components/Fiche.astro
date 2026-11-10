@@ -1,0 +1,93 @@
+---
+// Fiche technique en ticket : titre, perforation à encoches rondes, lignes mono.
+// Les encoches sont peintes couleur crème : la fiche doit être posée sur le fond de page.
+// Une valeur qui commence par « [À COMPLÉTER » s'affiche en placeholder.
+interface Props {
+  titre: string;
+  lignes: [string, string][];
+  /** Rang dans une liste, affiché [01] */
+  n?: number;
+}
+
+const { titre, lignes, n } = Astro.props;
+const aCompleter = (v: string) => v.startsWith('[À COMPLÉTER');
+---
+
+<article class="fiche">
+  <div class="tete">
+    <h3>{aCompleter(titre) ? <span class="todo">{titre}</span> : titre}</h3>
+    {n !== undefined && <span class="rang legende" aria-hidden="true">[{String(n).padStart(2, '0')}]</span>}
+  </div>
+  <span class="perfo" aria-hidden="true"></span>
+  <dl>
+    {lignes.map(([cle, valeur]) => (
+      <div>
+        <dt>{cle}</dt>
+        <dd>{aCompleter(valeur) ? <span class="todo">{valeur}</span> : valeur}</dd>
+      </div>
+    ))}
+  </dl>
+  <slot />
+</article>
+
+<style>
+  .fiche {
+    --pad: 20px;
+    --trou: 10px;
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    padding: var(--pad) var(--pad) 16px;
+    background: color-mix(in srgb, var(--encre) 6%, var(--chaux));
+    border-radius: var(--radius);
+  }
+  .tete { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+  .rang { opacity: .55; padding-top: .35em; }
+
+  /* Perforation : pointillé d'un bord à l'autre, une encoche ronde de chaque côté */
+  .perfo {
+    position: relative;
+    height: 0;
+    margin-inline: calc(-1 * var(--pad));
+    border-top: 1.5px dashed var(--filet);
+  }
+  .perfo::before,
+  .perfo::after {
+    content: '';
+    position: absolute;
+    top: calc(-1 * var(--trou) - .75px);
+    width: calc(2 * var(--trou));
+    height: calc(2 * var(--trou));
+    border-radius: 50%;
+    background: var(--chaux);
+  }
+  .perfo::before { left: calc(-1 * var(--trou)); }
+  .perfo::after { right: calc(-1 * var(--trou)); }
+  h3 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    font-variation-settings: 'wdth' 78;
+    line-height: 1.05;
+  }
+  dl { margin: 0; }
+  dl > div {
+    display: grid;
+    grid-template-columns: 13ch 1fr;
+    gap: 12px;
+    padding-block: 8px;
+    font-family: var(--font-mono);
+    font-size: .875rem;
+    line-height: 1.45;
+  }
+  dt::before {
+    content: '';
+    display: inline-block;
+    width: .45em;
+    height: .45em;
+    margin-right: .5em;
+    vertical-align: .12em;
+    background: currentColor;
+  }
+  dt { opacity: .72; }
+  dd { margin: 0; }
+</style>

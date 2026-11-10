@@ -1,0 +1,315 @@
+---
+import Base from '../layouts/Base.astro';
+import TetePage from '../components/TetePage.astro';
+import Fiche from '../components/Fiche.astro';
+import Carrousel from '../components/Carrousel.astro';
+import { photosAuberge } from '../data/photos-auberge';
+import { WHATSAPP_URL } from '../data/contact';
+
+const BOOKING_URL = 'https://www.booking.com/hotel/ma/good-wave-surf-house.html';
+
+// Tarifs repris de goodwavesurfmorocco.com (relevé du 2026-10-14). « Double » et « Double deluxe vue mer »
+// n'y figurent pas : leur prix vient de Booking (nuit du 22 au 24 novembre 2026, petit-déjeuner compris).
+// Avis Booking (relevés le 2026-10-14), extraits courts, qui défilent dans la carte de réservation.
+const avis: { texte: string; auteur: string }[] = [
+  { texte: 'The rooftop with view on the sea, the shared breakfast and dinners, the people and vibes.', auteur: 'Quentin, France' },
+  { texte: "L'ambiance familiale et l'accueil de Margot et Younès ! La vue imprenable sur les vagues.", auteur: 'Emeline, France' },
+  { texte: "L'ambiance, la gentillesse de Margot et Youness, font de ce séjour une expérience unique.", auteur: 'Karen, France' },
+  { texte: 'La maison est spacieuse et propre, très bien située, le petit-déjeuner délicieux.', auteur: 'Camille, France' },
+  { texte: "Tout !! Le petit dej, l'accueil, les chambres, l'emplacement, PARFAIT", auteur: 'Maëlys, France' },
+];
+
+const chambres: { titre: string; lignes: [string, string][] }[] = [
+  {
+    titre: 'Dortoir 4 lits',
+    lignes: [
+      ['lits', '2 lits superposés, dressing'],
+      ['étage', '1er ou 2e'],
+      ['salle de bain', 'Partagée'],
+      ['inclus', 'Petit-déjeuner'],
+      ['prix', '15 € par personne et par nuit'],
+    ],
+  },
+  {
+    titre: 'Double',
+    lignes: [
+      ['lits', '1 grand lit double'],
+      ['salle de bain', 'Partagée'],
+      ['inclus', 'Petit-déjeuner'],
+      ['prix', '38 € la nuit sur Booking'],
+    ],
+  },
+  {
+    titre: 'Double ou twin',
+    lignes: [
+      ['lits', '1 lit 200 × 200 ou 2 lits simples'],
+      ['en +', 'Petit balcon privé'],
+      ['étage', '1er ou 2e'],
+      ['salle de bain', 'Partagée'],
+      ['inclus', 'Petit-déjeuner'],
+      ['prix', '35 € la nuit'],
+    ],
+  },
+  {
+    titre: 'Double vue mer',
+    lignes: [
+      ['lits', '1 lit 180 × 200, dressing'],
+      ['vue', 'Océan, avec balcon'],
+      ['étage', '2e'],
+      ['salle de bain', 'Partagée'],
+      ['inclus', 'Petit-déjeuner'],
+      ['prix', '40 € la nuit'],
+    ],
+  },
+  {
+    titre: 'Double deluxe vue mer',
+    lignes: [
+      ['lits', '1 grand lit double'],
+      ['vue', 'Océan'],
+      ['salle de bain', 'Partagée'],
+      ['inclus', 'Petit-déjeuner'],
+      ['prix', '42 € la nuit sur Booking'],
+    ],
+  },
+  {
+    titre: 'Triple vue mer',
+    lignes: [
+      ['lits', '3 lits simples, ou 1 double et 1 simple'],
+      ['vue', 'Océan'],
+      ['étage', '3e'],
+      ['salle de bain', 'Partagée'],
+      ['inclus', 'Petit-déjeuner'],
+      ['prix', '45 € la nuit'],
+    ],
+  },
+];
+
+const sorties: { titre: string; lignes: [string, string][] }[] = [
+  { titre: 'Imsouane et les dunes', lignes: [['au menu', 'Surf à Imsouane, barbecue de poisson du jour, sandboarding dans les dunes de Tamri, coucher de soleil'], ['prix', '70 € par personne, dès 4 personnes. Dunes seules : 20 €']] },
+  { titre: 'Souk El Had', lignes: [['au menu', "Le grand marché d'Agadir, plus de 13 hectares"], ['prix', '10 € par personne, dès 2 personnes (transport)']] },
+  { titre: 'Paradise Valley', lignes: [['au menu', 'Route de montagne, randonnée guidée, baignade dans les piscines naturelles'], ['prix', '15 € par personne, dès 4 personnes']] },
+];
+
+const maison: [string, string][] = [
+  ['partagé', 'Salons, cuisine équipée, rooftop meublé'],
+  ['capacité', "Jusqu'à 19 personnes"],
+  ['salons', '3 salons marocains'],
+  ['salles de bain', '4, partagées, nettoyées chaque jour'],
+  ['wi-fi', 'Gratuit, fibre'],
+  ['parking', 'Gratuit'],
+  ['yoga', 'Tapis à disposition sur le rooftop'],
+  ['arrivée', 'De 13 h à 19 h'],
+  ['départ', 'De 8 h à 13 h'],
+  ['langues', 'Français, English, Español, العربية'],
+];
+
+const journee: [string, string][] = [
+  ['matin', 'Petit-déjeuner partagé, tout le monde à la même table.'],
+  ['journée', 'Surf ou moto, selon votre programme.'],
+  ['fin de journée', 'Le rooftop, face à la baie de Taghazout.'],
+  ['soir', '3 à 4 soirs par semaine, dîner marocain tous ensemble, cuisiné par Jamila : 10 €. Soirée barbecue : 15 €.'],
+];
+---
+
+<Base
+  title="L'auberge à Tamraght — Good Wave"
+  description="Une maison marocaine sur les hauteurs de Tamraght : chambres doubles, triples et dortoirs, rooftop face à la baie de Taghazout, petit-déjeuner partagé."
+>
+  <TetePage titre="Auberge" theme="auberge">
+    <p>Une maison marocaine sur les hauteurs de Tamraght. Un rooftop face à la baie de Taghazout, le petit-déj tous ensemble, et Banana Point à 18 minutes à pied.</p>
+  </TetePage>
+
+  <section class="bloc infos-maison">
+    <div class="wrap grille">
+      <div>
+        <h2 class="display">La maison</h2>
+        <Fiche titre="Bon à savoir" lignes={maison} />
+      </div>
+      <div class="journee-col">
+        <ol class="journee">
+          {journee.map(([moment, texte]) => {
+            const [avant, todo] = texte.split('[À COMPLÉTER');
+            return (
+              <li>
+                <span class="moment">{moment}</span>
+                <span>{avant}{todo && <span class="todo">{'[À COMPLÉTER' + todo}</span>}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc galerie">
+    <div class="wrap">
+      <Carrousel photos={photosAuberge} label="Les espaces de l'auberge" titre="Les espaces" />
+    </div>
+  </section>
+
+  <section class="bloc chambres">
+    <div class="wrap">
+      <div>
+        <div class="fiches">
+          {chambres.map((c, i) => <Fiche titre={c.titre} lignes={c.lignes} n={i + 1} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc sorties">
+    <div class="wrap">
+      <h2 class="display">Autour de la maison</h2>
+      <p class="chapeau">Des sorties organisées depuis l'auberge, pour les jours sans vagues ou juste pour voir le coin.</p>
+      <div class="fiches fiches--3">
+        {sorties.map((o, i) => <Fiche titre={o.titre} lignes={o.lignes} n={i + 1} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Avis et réservation réunis, dans la DA de la carte « Venez en crew » de l'accueil -->
+  <section class="reserver" aria-labelledby="reserver-titre">
+    <div class="wrap">
+      <div class="carte">
+        <div class="texte">
+          <h2 class="display" id="reserver-titre">Une chambre pour vous ?</h2>
+          <!-- Un avis à la fois, en fondu, en boucle (CSS seul) -->
+          <div class="avis" aria-label="Avis Booking">
+            {avis.map((v, i) => (
+              <blockquote style={`--i: ${i}`}>
+                <p class="accroche">« {v.texte} »</p>
+                <footer>{v.auteur}</footer>
+              </blockquote>
+            ))}
+          </div>
+          <div class="actions">
+            <a class="bouton" href={WHATSAPP_URL}>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3Z"/></svg>
+              demander une chambre
+            </a>
+            <a class="bouton" href={BOOKING_URL}>voir sur booking <span class="fleche" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <div class="notes">
+          <p class="note"><span class="chiffre display">10</span><span>sur Google Maps, 179 avis</span></p>
+          <p class="note"><span class="chiffre display">9,5</span><span>sur Booking, 90 avis</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Le carrousel s'enchaîne sans filet, avec des marges resserrées. */
+  .bloc.galerie { padding-block: 0; }
+  .bloc.chambres { padding-block: 40px 48px; }
+  .bloc.sorties { padding-top: 48px; }
+  .fiches { display: grid; gap: 16px; }
+  .chapeau { margin: 0 0 24px; max-width: 46ch; font-size: .9375rem; }
+
+  .grille { display: grid; gap: 56px; }
+
+  .journee { list-style: none; margin: 0; padding: 0; }
+  .journee li {
+    display: grid;
+    grid-template-columns: 14ch 1fr;
+    gap: 12px;
+    padding-block: 14px;
+    font-size: .9375rem;
+  }
+  .moment { font-family: var(--font-mono); font-size: .875rem; opacity: .72; padding-top: .15em; }
+
+
+  @media (min-width: 640px) {
+    .fiches { grid-template-columns: 1fr 1fr; }
+    .fiches--3 { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 820px) {
+    .grille { grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    /* Sans titre à droite : la journée démarre à la hauteur de la fiche, sous « La maison ». */
+    .journee-col { padding-top: calc(clamp(2.75rem, 11vw, 5.5rem) * .82 + 32px); }
+  }
+  @media (min-width: 960px) {
+    /* Sans photo, les chambres prennent toute la largeur, trois par ligne. */
+    .chambres .fiches { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Carte noire comme « Venez en crew » : texte à gauche, note Booking à droite. */
+  .reserver { padding-block: 0 96px; } /* le bloc du dessus apporte déjà ses 96px */
+  .carte {
+    --liseret: 8px;
+    display: grid;
+    gap: 32px;
+    padding: var(--liseret);
+    border-radius: var(--radius);
+    background: var(--encre);
+    color: var(--chaux);
+  }
+  .texte { display: grid; gap: 24px; justify-items: start; padding: 24px 16px 16px; }
+  .texte h2 { margin: 0; max-width: 12ch; font-size: clamp(2.75rem, 11vw, 5.5rem); } /* taille des autres titres de section */
+  /* Avis empilés au même endroit, chacun 5 s à l'écran ; la pile prend la hauteur du plus long. */
+  .avis { display: grid; width: 100%; max-width: 72ch; }
+  blockquote {
+    grid-area: 1 / 1;
+    margin: 0;
+    text-wrap: balance;
+    animation: avis 25s infinite both;
+    animation-delay: calc(var(--i) * 5s);
+  }
+  .avis:hover blockquote { animation-play-state: paused; }
+  @keyframes avis {
+    0% { opacity: 0; transform: translateY(8px); }
+    2%, 18% { opacity: 1; transform: none; }
+    20%, 100% { opacity: 0; transform: translateY(-8px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    blockquote { animation: none; }
+    blockquote + blockquote { display: none; }
+  }
+  blockquote p {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+    font-weight: 700;
+    font-variation-settings: 'wdth' 85;
+    line-height: 1.15;
+  }
+  blockquote footer { margin-top: 12px; font-family: var(--font-mono); font-size: .8125rem; opacity: .6; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .bouton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--filet);
+    border-radius: var(--radius);
+    color: var(--chaux);
+    font-family: var(--font-mono);
+    font-size: .875rem;
+    text-decoration: none;
+    transition: border-color .25s ease;
+  }
+  .bouton svg { width: 16px; height: 16px; flex: none; }
+  .bouton .fleche { transition: transform .25s ease; }
+  .bouton:hover, .bouton:focus-visible { border-color: currentColor; }
+  .bouton:hover .fleche, .bouton:focus-visible .fleche { transform: translateX(4px); }
+  .bouton:focus-visible { outline: 2px solid var(--chaux); outline-offset: 3px; }
+  /* Les notes en grand, à droite, l'une sous l'autre */
+  .notes { display: flex; flex-wrap: wrap; gap: 24px 48px; padding: 0 16px 24px; }
+  .note { margin: 0; display: grid; gap: 6px; justify-items: start; font-family: var(--font-mono); font-size: .875rem; }
+  .chiffre { font-size: clamp(5rem, 16vw, 11rem); line-height: .82; }
+  @media (min-width: 820px) {
+    /* Titre, avis et boutons à gauche ; les deux notes empilées à droite, sur toute la hauteur. */
+    .carte {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 32px 48px;
+      padding: clamp(32px, 4vw, 56px);
+    }
+    .texte { display: contents; }
+    .texte h2 { grid-column: 1; grid-row: 1; text-box: trim-both cap alphabetic; }
+    .notes { grid-column: 2; grid-row: 1 / span 3; align-self: start; flex-direction: column; align-items: flex-end; padding: 0; }
+    .avis { grid-column: 1; }
+    .actions { grid-column: 1; }
+    .note { justify-items: end; }
+    .chiffre { text-box: trim-both cap alphabetic; margin-bottom: .22em; } /* place pour la virgule */
+  }
+</style>

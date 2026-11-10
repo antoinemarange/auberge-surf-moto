@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import TetePage from '../components/TetePage.astro';
+import CarteMoto from '../components/CarteMoto.astro';
+import Fiche from '../components/Fiche.astro';
+import Appel from '../components/Appel.astro';
+import { photosMoto } from '../data/photos-moto';
+
+// Formules et prix repris de taghazoutendurohorizon.com (relevé du 2026-10-14).
+const sorties: { titre: string; lignes: [string, string][] }[] = [
+  {
+    titre: 'Sortie découverte',
+    lignes: [
+      ['niveau', 'Débutant ou intermédiaire'],
+      ['au menu', 'Pistes de sable et de cailloux autour de Taghazout'],
+      ['durée', '2 h'],
+      ['prix', 'À partir de 150 €'],
+      ['inclus', "Moto d'enduro, guide du coin, parcours adapté à votre niveau"],
+    ],
+  },
+  {
+    titre: 'Journée enduro',
+    lignes: [
+      ['niveau', 'Parcours adapté à votre niveau et à votre forme'],
+      ['au menu', "Pistes de montagne, villages berbères isolés, points de vue sur l'océan"],
+      ['durée', 'La journée'],
+      ['prix', 'À partir de 350 €'],
+      ['inclus', "Moto d'enduro, guide du coin"],
+    ],
+  },
+  {
+    titre: 'Immersion enduro',
+    lignes: [
+      ['niveau', 'Parcours adapté au groupe et à ses objectifs'],
+      ['au menu', 'Chaque jour un terrain neuf : montagne, villages, pistes désertiques, océan'],
+      ['durée', 'De 2 à 6 jours'],
+      ['prix', '500 € par jour'],
+      ['inclus', "Moto d'enduro, hébergement, tous les repas, véhicule d'assistance, guide"],
+    ],
+  },
+];
+
+const terrain: [string, string][] = [
+  ['Taghazout', 'Le camp de base. Les premières pistes partent de là.'],
+  ['Tamri', "Les dunes au nord, au-dessus de l'océan."],
+  ['Imouzzer', "L'arrière-pays : montagne, montées techniques, villages berbères."],
+  ['Tifnit et Mirleft', 'Plus au sud, la côte sauvage, pour les sorties de plusieurs jours.'],
+];
+---
+
+<Base
+  title="Moto à Tamraght — Good Wave"
+  description="Enduro en KTM autour de Taghazout : sortie découverte de 2 h dès 150 €, journée dès 350 €, immersion de 2 à 6 jours. Réservation sur WhatsApp."
+>
+  <TetePage titre="Moto" theme="moto">
+    <p>Des dunes, des pistes de montagne, des villages loin de tout et l'océan en contrebas. En KTM, avec un guide du coin.</p>
+  </TetePage>
+
+  <section class="bloc">
+    <div class="wrap">
+      <div class="fiches">
+        {sorties.map((s, i) => <Fiche titre={s.titre} lignes={s.lignes} n={i + 1} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc terrain">
+    <div class="wrap grille-terrain">
+      <CarteMoto />
+      <div>
+        <h2 class="display">Le terrain</h2>
+        <p class="chapeau">Pistes rapides, montées techniques, sable, cailloux. On choisit le parcours selon votre niveau.</p>
+        <dl>
+          {terrain.map(([nom, texte]) => (
+            <div>
+              <dt>{nom}</dt>
+              <dd>{texte}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <Appel titre="On roule ?" photos={photosMoto} />
+</Base>
+
+<style>
+  .fiches { display: grid; gap: 16px; }
+
+  .terrain { background: var(--encre); color: var(--chaux); }
+  .grille-terrain { display: grid; gap: 40px; }
+  .chapeau { margin: 0 0 28px; max-width: 44ch; font-size: .9375rem; }
+  dl { margin: 0; }
+  dl > div { padding-block: 14px; border-top: 1px solid var(--filet); }
+  dl > div:last-child { border-bottom: 1px solid var(--filet); }
+  dt {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-variation-settings: 'wdth' 78;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  dd { margin: 0; max-width: 44ch; }
+
+  @media (min-width: 640px) {
+    .fiches { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 960px) {
+    .fiches { grid-template-columns: repeat(3, 1fr); }
+    .grille-terrain { grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  }
+</style>

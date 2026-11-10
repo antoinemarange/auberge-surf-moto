@@ -1,0 +1,46 @@
+---
+// Tampon rond façon étiquette de marque. Décoratif.
+interface Props {
+  texte?: string;
+  taille?: number;
+}
+
+const {
+  texte = 'Good Wave ✺ Surf & moto ✺ Tamraght ✺ ',
+  taille = 120,
+} = Astro.props;
+const id = `tampon-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg class="tampon" width={taille} height={taille} viewBox="0 0 120 120" aria-hidden="true">
+  <defs>
+    <path id={id} d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1 -88 0" />
+  </defs>
+  <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" stroke-width="1.5" />
+  <circle cx="60" cy="60" r="33" fill="none" stroke="currentColor" stroke-width="1" />
+  <text textLength="272" lengthAdjust="spacing">
+    <textPath href={`#${id}`}>{texte.toUpperCase()}</textPath>
+  </text>
+  <g
+    transform="translate(44 44)"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+  >
+    <path d="M2 21c2.5 0 3.5-2 6-2s3.5 2 6 2 3.5-2 6-2 3.5 2 6 2" transform="scale(1)" />
+    <path d="M6 16c0-6 5-11 11-11 4 0 7 3 7 6.5 0 2.5-2 4.5-4.5 4.5-2 0-3.5-1.5-3.5-3.3" />
+  </g>
+</svg>
+
+<style>
+  .tampon {
+    flex: none;
+    transform: rotate(-10deg);
+  }
+  text {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    fill: currentColor;
+  }
+</style>

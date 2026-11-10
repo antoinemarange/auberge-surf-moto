@@ -1,0 +1,32 @@
+---
+// Petites croix de repère aux quatre coins d'un bloc, comme sur une planche de tirage.
+// Le parent doit être en position relative. Couleur = currentColor.
+---
+
+<span class="reperes" aria-hidden="true">
+  {[0, 1, 2, 3].map(() => (
+    <svg viewBox="0 0 12 12"><path d="M6 0v12M0 6h12" /></svg>
+  ))}
+</span>
+
+<style>
+  .reperes {
+    position: absolute;
+    inset: 14px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  svg {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    opacity: .75;
+  }
+  svg:nth-child(1) { top: 0; left: 0; }
+  svg:nth-child(2) { top: 0; right: 0; }
+  svg:nth-child(3) { bottom: 0; left: 0; }
+  svg:nth-child(4) { bottom: 0; right: 0; }
+</style>

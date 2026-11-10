@@ -1,0 +1,149 @@
+---
+import Base from '../layouts/Base.astro';
+import TetePage from '../components/TetePage.astro';
+import Fiche from '../components/Fiche.astro';
+import CarteSpots from '../components/CarteSpots.astro';
+import Appel from '../components/Appel.astro';
+import { photosSurf } from '../data/photos-surf';
+
+// Tarifs repris de goodwavesurfmorocco.com (relevé du 2026-10-07). Contenu des offres revu par le client le 2026-11-10.
+// Base commune aux semaines ; chaque semaine ajoute ses propres lignes.
+const BASE_DEBUT = "Transferts aller-retour à l'aéroport d'Agadir, 7 nuits en dortoir avec petit-déjeuner (chambre privée en supplément)";
+const semaine = (...extras: string[]) => [BASE_DEBUT, ...extras, '3 dîners'].join(', ');
+
+const offres: { titre: string; lignes: [string, string][] }[] = [
+  {
+    titre: 'Cours de surf',
+    lignes: [
+      ['niveau', 'Jamais surfé, ou débutant'],
+      ['au menu', 'Sécurité, lecture des vagues, matériel, premiers take-off'],
+      ['durée', '2 h de cours + pratique libre'],
+      ['prix', '40 € par personne'],
+      ['inclus', 'Transport depuis la surf house, soft board, combinaison et déjeuner sur la plage'],
+    ],
+  },
+  {
+    titre: 'Surf guiding',
+    lignes: [
+      ['niveau', 'Intermédiaire à confirmé'],
+      ['au menu', 'Le bon spot au bon moment, selon la houle et la marée'],
+      ['durée', 'Deux sessions par jour'],
+      ['prix', '45 € par personne'],
+      ['inclus', 'Transport depuis la surf house, hard board, combinaison et déjeuner sur la plage'],
+    ],
+  },
+  {
+    titre: 'Semaine cours de surf',
+    lignes: [
+      ['au menu', 'Du surf, des bons repas et de la convivialité'],
+      ['prix', '440 € par personne'],
+      ['inclus', semaine('6 jours de cours de surf avec déjeuner à la plage')],
+    ],
+  },
+  {
+    titre: 'Semaine surf guiding',
+    lignes: [
+      ['au menu', 'Du surf, du surf, du surf'],
+      ['prix', '470 € par personne'],
+      ['inclus', semaine('6 jours de surf guiding avec matériel et déjeuner à la plage')],
+    ],
+  },
+  {
+    titre: 'Semaine full activity',
+    lignes: [
+      ['au menu', 'Du surf et des activités dans la région'],
+      ['prix', '500 € par personne'],
+      ['inclus', semaine('6 jours de cours de surf avec déjeuner à la plage', '2 séances de yoga', 'surf dans les dunes de Tamri', "transfert au souk d'Agadir")],
+    ],
+  },
+  {
+    titre: 'Semaine surf & yoga',
+    lignes: [
+      ['au menu', 'Histoire de bien réaligner vos chakras'],
+      ['prix', '530 € par personne'],
+      ['inclus', semaine('6 jours de surf avec déjeuner à la plage', '6 séances de yoga de 1 h')],
+    ],
+  },
+];
+
+const spots: [string, string][] = [
+  ['Anchor Point', 'La droite de Taghazout. Pour surfeurs confirmés.'],
+  ['Banana Point', "Une droite plus douce à l'embouchure de l'oued, à 18 minutes à pied de la maison. Idéale pour progresser."],
+  ['Anza', 'Plus au sud, vers Agadir. Une plage qui casse à gauche comme à droite. Pour débutants et intermédiaires.'],
+];
+---
+
+<Base
+  title="Surf à Tamraght — Good Wave"
+  description="Cours de surf dès 40 €, surf guiding et semaines surf à Tamraght, transfert aéroport inclus. Anchor Point, Banana Point, Anza. Réservation sur WhatsApp."
+>
+  <TetePage titre="Surf" theme="surf">
+    <p>On choisit le spot adapté à votre niveau, et le bon timing pour une session optimale.</p>
+  </TetePage>
+
+  <section class="bloc">
+    <div class="wrap offres">
+      <div>
+        <div class="fiches">
+          {offres.map((o, i) => <Fiche titre={o.titre} lignes={o.lignes} n={i + 1} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc spots">
+    <div class="wrap grille-spots">
+      <CarteSpots />
+      <div>
+        <h2 class="display">Les spots</h2>
+        <p class="chapeau">Chaque matin, on regarde la houle, le vent et la marée. Puis on choisit le spot qui colle à votre niveau.</p>
+        <dl>
+          {spots.map(([nom, texte]) => (
+            <div>
+              <dt>{nom}</dt>
+              <dd>
+                {texte.includes('[À COMPLÉTER') ? (
+                  <>
+                    {texte.split('[À COMPLÉTER')[0]}
+                    <span class="todo">{'[À COMPLÉTER' + texte.split('[À COMPLÉTER')[1]}</span>
+                  </>
+                ) : texte}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <Appel titre="On se retrouve à l'eau ?" photos={photosSurf} />
+</Base>
+
+<style>
+  .fiches { display: grid; gap: 16px; }
+
+  .spots { background: var(--encre); color: var(--chaux); }
+  .grille-spots { display: grid; gap: 40px; }
+  .chapeau { margin: 0 0 28px; max-width: 44ch; font-size: .9375rem; }
+  dl { margin: 0; }
+  dl > div { padding-block: 14px; border-top: 1px solid var(--filet); }
+  dl > div:last-child { border-bottom: 1px solid var(--filet); }
+  dt {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-variation-settings: 'wdth' 78;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  dd { margin: 0; max-width: 44ch; }
+
+  @media (min-width: 640px) {
+    .fiches { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 960px) {
+    /* Sans photo, les fiches prennent toute la largeur entre les marges, trois par ligne. */
+    .fiches { grid-template-columns: repeat(3, 1fr); }
+    .grille-spots { grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  }
+</style>

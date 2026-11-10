@@ -1,0 +1,22 @@
+{
+  "name": "goodwave-onepager",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "npm run build && wrangler dev",
+    "generate-types": "wrangler types",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.3.4",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource/dm-mono": "^5.3.0",
+    "astro": "^7.3.4",
+    "gsap": "^3.15.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.0"
+  }
+}

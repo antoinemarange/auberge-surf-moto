@@ -1,0 +1,182 @@
+---
+// Carrousel photo 16:9, défilement au doigt (scroll-snap) + boutons ‹ › en bas.
+// Slot « encoche » : posé dans le coin haut gauche de la photo, par-dessus le défilement.
+// Dès la deuxième photo, la classe `libre` sur le carrousel permet de retirer l'encoche.
+// Avec `titre`, l'encoche porte ce titre suivi des flèches, et reste en place.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import CarrouselFleches from './CarrouselFleches.astro';
+
+interface Props {
+  photos: { src: ImageMetadata; alt: string }[];
+  label: string;
+  sizes?: string;
+  /** Sur ordi, remplit toute la hauteur de son conteneur au lieu de rester en 16:9 */
+  remplir?: boolean;
+  /** Titre dans l'encoche, flèches juste à côté */
+  titre?: string;
+}
+
+const { photos, label, sizes = '(min-width: 1232px) 1200px, 100vw', remplir = false, titre } = Astro.props;
+---
+
+<section class:list={['carrousel', { 'carrousel--remplir': remplir }]} aria-roledescription="carrousel" aria-label={label}>
+  <div class="cadre">
+  {titre ? (
+    <div class="encoche encoche--titre">
+      <h2 class="display">{titre}</h2>
+      <CarrouselFleches total={photos.length} />
+    </div>
+  ) : <slot name="encoche" />}
+  <div class="piste" tabindex="0" aria-label={`${label}, faire défiler`}>
+    {photos.map((p, i) => (
+      <figure class="diapo" aria-roledescription="diapositive" aria-label={`${i + 1} sur ${photos.length}`}>
+        <Image
+          src={p.src}
+          alt={p.alt}
+          width={Math.min(2000, p.src.width)}
+          widths={[640, 960, 1400, 2000].filter((w) => w <= p.src.width)}
+          sizes={sizes}
+          loading={i === 0 ? 'eager' : 'lazy'}
+        />
+      </figure>
+    ))}
+  </div>
+  </div>
+
+  {!titre && (
+    <div class="commandes">
+      <CarrouselFleches total={photos.length} />
+      <slot name="action" />
+    </div>
+  )}
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.carrousel').forEach((c) => {
+    const piste = c.querySelector<HTMLElement>('.piste')!;
+    const prec = c.querySelector<HTMLButtonElement>('.prec')!;
+    const suiv = c.querySelector<HTMLButtonElement>('.suiv')!;
+    const compteur = c.querySelector<HTMLElement>('.compteur')!;
+    const total = piste.children.length;
+    const calme = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const index = () => Math.round(piste.scrollLeft / piste.clientWidth);
+    // `libre` dès le clic (vers la photo visée), sinon dès que la piste bouge au doigt
+    let cible: number | null = null;
+    let fin: number | undefined;
+    const aller = (i: number) => {
+      cible = i;
+      c.classList.toggle('libre', i > 0);
+      piste.scrollTo({ left: i * piste.clientWidth, behavior: calme ? 'auto' : 'smooth' });
+      clearTimeout(fin);
+      fin = window.setTimeout(() => (cible = null), 1000); // si `scrollend` n'existe pas
+    };
+    const maj = () => {
+      const i = index();
+      compteur.textContent = `${i + 1} / ${total}`;
+      prec.disabled = i === 0;
+      suiv.disabled = i === total - 1;
+      if (cible === null) c.classList.toggle('libre', piste.scrollLeft > 4);
+    };
+
+    prec.addEventListener('click', () => aller(index() - 1));
+    suiv.addEventListener('click', () => aller(index() + 1));
+    piste.addEventListener('scroll', maj, { passive: true });
+    piste.addEventListener('scrollend', () => { cible = null; maj(); });
+    piste.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); aller(index() - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); aller(index() + 1); }
+    });
+  });
+</script>
+
+<style>
+  .carrousel { display: grid; gap: 14px; }
+
+  /* Titre dans une encoche découpée en haut à gauche de la photo, couleur de la page,
+     comme « Réserver sur WhatsApp » dans le hero. Le titre est posé dans le slot « encoche ». Elle déborde de 2px en haut et à gauche
+     pour couvrir le bord de la photo ; les deux congés prolongent l'arrondi. */
+  .cadre > :global(.encoche) {
+    --r: var(--radius);
+    --deb: 2px;
+    position: absolute;
+    top: calc(-1 * var(--deb));
+    left: calc(-1 * var(--deb));
+    z-index: 1;
+    margin: 0;
+    padding: var(--deb) clamp(14px, 1.6vw, 22px) clamp(12px, 1.4vw, 20px) var(--deb);
+    background: var(--chaux);
+    border-bottom-right-radius: var(--r);
+  }
+  .cadre > :global(.encoche)::before,
+  .cadre > :global(.encoche)::after {
+    content: '';
+    position: absolute;
+    width: var(--r);
+    height: var(--r);
+    background: radial-gradient(circle at 100% 100%, transparent var(--r), var(--chaux) calc(var(--r) + .5px));
+  }
+  .cadre > :global(.encoche)::before { left: var(--deb); top: 100%; }
+  .cadre > :global(.encoche)::after { left: 100%; top: var(--deb); }
+  /* Au clic sur la flèche droite, l'encoche se replie dans le coin et la photo apparaît en entier ;
+     elle revient sur la première photo. La découpe englobe les congés (débordants de --r). */
+  .cadre > :global(.encoche) {
+    clip-path: inset(0 calc(-1 * var(--r) - 1px) calc(-1 * var(--r) - 1px) 0);
+    transition: clip-path .9s cubic-bezier(.65, 0, .35, 1), opacity .6s ease .1s;
+  }
+  .carrousel.libre .cadre > :global(.encoche:not(.encoche--titre)) {
+    clip-path: inset(0 100% 100% 0);
+    opacity: 0;
+    transition: clip-path .9s cubic-bezier(.65, 0, .35, 1), opacity .5s ease .25s;
+  }
+  /* Encoche avec titre : le titre et les flèches côte à côte, l'encoche ne se replie pas. */
+  .encoche--titre { display: flex; align-items: center; gap: clamp(12px, 2vw, 28px); }
+  .encoche--titre h2 { margin: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .cadre > :global(.encoche) { transition: none; }
+  }
+
+  .cadre { position: relative; min-height: 0; }
+  .piste {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-radius: var(--radius);
+  }
+  .piste::-webkit-scrollbar { display: none; }
+  .diapo {
+    flex: 0 0 100%;
+    margin: 0;
+    aspect-ratio: 16 / 9;
+    scroll-snap-align: start;
+  }
+  .diapo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Flèches en bas à gauche, action éventuelle (slot) en bas à droite */
+  .commandes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+  }
+
+  @media (min-width: 820px) {
+    .carrousel--remplir {
+      height: 100%;
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+    .carrousel--remplir .piste { height: 100%; }
+    .carrousel--remplir .diapo {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+  }
+</style>

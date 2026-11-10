@@ -1,0 +1,72 @@
+---
+// En-tête des pages Surf / Moto / Auberge / Crews : bloc arrondi, titre géant.
+import Picto from './Picto.astro';
+import Reperes from './Reperes.astro';
+
+interface Props {
+  titre: string;
+  theme: 'surf' | 'moto' | 'auberge' | 'crews';
+  picto?: 'vague' | 'moto' | 'maison' | 'crew';
+}
+
+const { titre, theme, picto } = Astro.props;
+// Titre long : plus petit, sur deux lignes
+const long = titre.length > 10;
+---
+
+<section class:list={['tete', `tete--${theme}`]}>
+  <Reperes />
+  <div class="wrap">
+    {picto && <span class="picto"><Picto nom={picto} taille={44} /></span>}
+    <h1 class:list={['display', { long }]}>{titre}</h1>
+    <div class="intro"><slot /></div>
+  </div>
+</section>
+
+<style>
+  .tete {
+    position: relative;
+    margin-inline: 8px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    isolation: isolate;
+    /* Même marge en haut, en bas et à gauche : le titre tombe au milieu de la hauteur. */
+    --marge: clamp(28px, 6vw, 96px);
+    padding: var(--marge);
+  }
+  .tete::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--grain);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .tete--surf { background: linear-gradient(180deg, #3a3a3a 0%, #141414 55%, #0a0a0a 100%); color: var(--chaux); }
+  .tete--moto { background: linear-gradient(180deg, #d2553c 0%, #8a3b29 55%, #141414 100%); color: var(--chaux); }
+  .tete--auberge { background: linear-gradient(180deg, #f5efe4 0%, #e3d6c1 60%, #b49a7a 100%); color: var(--encre); }
+  .tete--crews { background: var(--encre); color: var(--chaux); }
+
+  .wrap { --titre: clamp(5.5rem, 29vw, 15rem); display: grid; gap: 20px; max-width: none; margin: 0; padding: 0; }
+  .picto { position: absolute; top: 24px; right: var(--marge); }
+  h1 {
+    font-size: var(--titre);
+    /* Correction optique : l'encre des capitales est un peu haute et en retrait dans sa boîte. */
+    transform: translate(.018em, .019em);
+  }
+  h1.long { --titre: clamp(3.5rem, 13vw, 9rem); max-width: 9ch; }
+  .intro :global(p) {
+    margin: 0;
+    max-width: 44ch;
+    font-size: .9375rem;
+    line-height: 1.45;
+  }
+
+  @media (min-width: 820px) {
+    /* Titre à gauche, texte contre la marge droite, tous deux au milieu de la hauteur. */
+    .wrap { grid-template-columns: auto 1fr; align-items: end; gap: 48px; }
+    /* Le retrait reprend celui de l'encre du titre, pour une marge droite égale à la gauche. */
+    .intro { justify-self: end; align-self: center; margin-right: calc(var(--titre) * .0625); }
+  }
+</style>

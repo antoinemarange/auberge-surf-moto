@@ -1,0 +1,160 @@
+---
+// Margot et Youness : qui est derrière Good Wave. Margot = surf, Youness = moto, à deux = la maison.
+// Seuls ces faits sont sûrs ; le reste attend leurs mots ([À COMPLÉTER]).
+import Base from '../layouts/Base.astro';
+import TetePage from '../components/TetePage.astro';
+import Picto from '../components/Picto.astro';
+import { WHATSAPP_URL } from '../data/contact';
+
+const duo: { nom: string; picto: 'vague' | 'moto'; role: string; texte: string; todo: string; lien: [string, string] }[] = [
+  {
+    nom: 'Margot',
+    picto: 'vague',
+    role: 'le surf',
+    texte: 'Margot, c’est le surf. C’est aussi elle qui vous répond sur WhatsApp et qui cale votre session.',
+    todo: '[À COMPLÉTER : son parcours, depuis quand elle surfe, ce qu’elle aime transmettre]',
+    lien: ['/surf', 'les offres surf'],
+  },
+  {
+    nom: 'Youness',
+    picto: 'moto',
+    role: 'la moto',
+    texte: 'Youness, c’est la moto. Les sorties enduro dans les collines derrière la maison, c’est lui.',
+    todo: '[À COMPLÉTER : son parcours, depuis quand il roule, ce qu’il aime montrer de la région]',
+    lien: ['/moto', 'les sorties moto'],
+  },
+];
+---
+
+<Base
+  title="Margot & Youness — Good Wave"
+  description="Margot pour le surf, Youness pour la moto : le couple derrière Good Wave Surf House à Tamraght."
+>
+  <TetePage titre="Le duo" theme="surf">
+    <p>Le couple derrière Good Wave : le surf, la moto et une maison ouverte à Tamraght.</p>
+  </TetePage>
+
+  <section class="bloc duo">
+    <div class="wrap grille">
+      {duo.map((p) => (
+        <article class="carte">
+          <span class="picto"><Picto nom={p.picto} taille={36} /></span>
+          <h2 class="display">{p.nom}</h2>
+          <p class="role">{p.role}</p>
+          <p>{p.texte}</p>
+          <p><span class="todo">{p.todo}</span></p>
+          <a class="bouton" href={p.lien[0]}>{p.lien[1]} <span class="fleche" aria-hidden="true">→</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="bloc film">
+    <div class="wrap">
+      <div class="cadre">
+        <video src="/media/hero.mp4" poster="/media/hero-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Surfeurs sur les vagues de la baie, couchers de soleil sur la plage."></video>
+        <span class="cadre__picto" aria-hidden="true"><Picto nom="crew" taille={44} /></span>
+        <h2 class="display encoche-bas">Et la maison</h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc maison">
+    <div class="wrap">
+      <div class="texte">
+        <p>Le surf d’un côté, la moto de l’autre : il fallait un endroit pour tout le monde. Ils ont ouvert l’auberge, où l’on dort, mange et part ensemble le matin.</p>
+        <p class="droite"><span class="todo">[À COMPLÉTER : l’année d’ouverture, comment ils ont trouvé la maison]</span></p>
+        <div class="actions">
+          <a class="bouton" href="/auberge">voir l’auberge <span class="fleche" aria-hidden="true">→</span></a>
+          <a class="bouton" href={WHATSAPP_URL}>réserver sur whatsapp <span class="fleche" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  .duo { padding-bottom: 0; } /* la vidéo suit, avec sa propre marge au-dessus */
+  .film { padding-bottom: 0; }
+  .cadre { position: relative; }
+  /* Titre dans une encoche découpée en bas à gauche de la vidéo, couleur de la page,
+     comme « Réserver sur WhatsApp » dans le hero de l'accueil. Les deux congés prolongent l'arrondi. */
+  .encoche-bas {
+    --r: var(--radius);
+    --deb: 2px;
+    position: absolute;
+    left: calc(-1 * var(--deb));
+    bottom: calc(-1 * var(--deb));
+    margin: 0;
+    padding: clamp(12px, 1.4vw, 20px) clamp(14px, 1.6vw, 22px) var(--deb) var(--deb);
+    background: var(--chaux);
+    border-top-right-radius: var(--r);
+  }
+  .encoche-bas::before,
+  .encoche-bas::after {
+    content: '';
+    position: absolute;
+    width: var(--r);
+    height: var(--r);
+    background: radial-gradient(circle at 100% 0, transparent var(--r), var(--chaux) calc(var(--r) + .5px));
+  }
+  .encoche-bas::before { left: var(--deb); bottom: 100%; }
+  .encoche-bas::after { left: 100%; bottom: var(--deb); }
+  .cadre__picto { position: absolute; top: 20px; right: 20px; display: flex; color: var(--encre); }
+  .film video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background: var(--encre);
+  }
+
+  .grille { display: grid; gap: 12px; }
+  .carte {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+    align-content: start;
+    padding: 24px 20px;
+    border: 1.5px solid var(--filet);
+    border-radius: var(--radius);
+  }
+  .carte h2, .maison h2 { margin: 0; }
+  .role { font-family: var(--font-mono); font-size: .875rem; opacity: .65; }
+  .carte p, .texte p { margin: 0; max-width: 46ch; font-size: .9375rem; line-height: 1.6; }
+
+  /* Pas de filet pleine largeur entre les sections sur cette page */
+  .maison { padding-block: 32px 48px; }
+  .texte { display: grid; gap: 16px; justify-items: start; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+
+  .bouton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--filet);
+    border-radius: var(--radius);
+    color: inherit;
+    font-family: var(--font-mono);
+    font-size: .875rem;
+    text-decoration: none;
+    transition: border-color .25s ease;
+  }
+  .fleche { transition: transform .25s ease; }
+  .bouton:hover, .bouton:focus-visible { border-color: currentColor; }
+  .bouton:hover .fleche, .bouton:focus-visible .fleche { transform: translateX(4px); }
+
+  @media (min-width: 820px) {
+    .duo .grille { grid-template-columns: 1fr 1fr; }
+    .carte { padding: 32px 28px; }
+    .maison { padding-block: 40px 96px; } /* dernière section avant le pied de page */
+    /* Premier texte et boutons à gauche, second texte à droite */
+    .texte { grid-template-columns: 1fr 1fr; column-gap: 64px; }
+    .texte .droite { grid-column: 2; grid-row: 1; justify-self: end; }
+    .texte .actions { grid-column: 1; }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+// Accueil : texte à gauche (côté océan), carte à droite qui remplit le bloc jusqu'aux bords.
+import CarteSpots from './CarteSpots.astro';
+import Reperes from './Reperes.astro';
+---
+
+<section class="bloc spots" id="spots">
+  <Reperes />
+  <div class="wrap texte">
+    <h2 class="display">Le spot</h2>
+    <p>Tamraght, entre Taghazout et Anza. Au nord, Killer, Mystery et Anchor Point. Juste en bas de la maison, Devil’s Rock et Banana Point. Derrière, les montagnes d’où partent les sorties moto.</p>
+  </div>
+  <div class="map"><CarteSpots plein /></div>
+</section>
+
+<style>
+  /* Carte arrondie détachée, comme le hero et les panneaux Surf / Moto.
+     Texte à gauche, sur « l'océan » ; la carte calée à droite, coupée net par les bords du bloc. */
+  .spots {
+    position: relative;
+    container-type: inline-size; /* la carte centre son échelle et son zoom sur ce bloc */
+    margin: 8px;
+    border-radius: var(--radius);
+    background: var(--encre);
+    color: var(--chaux);
+    overflow: hidden;
+    padding-block: 40px 0;
+  }
+  p { margin: 0; max-width: 44ch; }
+  .map :global(.carte) { aspect-ratio: 860 / 474; }
+
+  @media (min-width: 820px) {
+    .spots {
+      display: flex;
+      align-items: center;
+      min-height: clamp(460px, 64vh, 600px);
+      padding-block: 48px;
+    }
+    /* Le bloc texte passe au-dessus de la carte : il laisse passer la souris, sauf sur le texte lui-même */
+    .texte { position: relative; z-index: 1; width: 100%; pointer-events: none; }
+    .texte > * { pointer-events: auto; }
+    .map {
+      position: absolute;
+      inset: 0 0 0 auto;
+      height: 100%;
+      aspect-ratio: 860 / 474;
+    }
+    .map :global(.carte) { height: 100%; aspect-ratio: auto; }
+  }
+</style>

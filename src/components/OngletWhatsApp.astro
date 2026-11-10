@@ -1,0 +1,174 @@
+---
+// Contact toujours accessible : deux petites icônes au bord droit (en bas à droite sur mobile).
+// WhatsApp ouvre une fenêtre avec Margot ; le profil ouvre Instagram surf, Instagram moto et l'e-mail.
+// Les liens Instagram s'ouvrent dans un nouvel onglet : le visiteur garde le site ouvert.
+// Fenêtres en `popover` natif : pas de JS, fermeture au clic dehors ou avec Échap.
+import { WHATSAPP_URL, WHATSAPP_NUMERO, MARGOT_PHOTO, INSTAGRAM_SURF_URL, INSTAGRAM_MOTO_URL, EMAIL } from '../data/contact';
+
+// [texte affiché, lien, avec le logo Instagram ?]
+const liens: [string, string, boolean][] = [
+  ['Auberge + Surf', INSTAGRAM_SURF_URL, true],
+  ['Moto', INSTAGRAM_MOTO_URL, true],
+  [EMAIL, `mailto:${EMAIL}`, false],
+];
+---
+
+<div class="onglet">
+  <button class="ico ico--wa" type="button" popovertarget="pop-wa" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3Z"/></svg>
+  </button>
+  <button class="ico ico--profil" type="button" popovertarget="pop-profil" aria-label="Instagram et e-mail">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75" /><path d="M4.75 20c.9-3.6 3.8-5.75 7.25-5.75S18.35 16.4 19.25 20" /></svg>
+  </button>
+</div>
+
+<div class="pop" id="pop-wa" popover>
+  <button class="fermer" type="button" popovertarget="pop-wa" popovertargetaction="hide" aria-label="Fermer">×</button>
+  <div class="margot">
+    {MARGOT_PHOTO
+      ? <img src={MARGOT_PHOTO} alt="Margot" width="56" height="56" />
+      : <span class="avatar" aria-hidden="true">M</span>}
+    <div>
+      <p class="nom">Margot</p>
+      <p class="numero">{WHATSAPP_NUMERO}</p>
+      <p class="role">Good Wave Surf House</p>
+    </div>
+  </div>
+  <a class="ecrire" href={WHATSAPP_URL}>
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3Z"/></svg>
+    Écrire sur WhatsApp
+  </a>
+</div>
+
+<div class="pop" id="pop-profil" popover>
+  <button class="fermer" type="button" popovertarget="pop-profil" popovertargetaction="hide" aria-label="Fermer">×</button>
+  <ul>
+    {liens.map(([label, url, insta]) => (
+      <li>
+        <a
+          href={url}
+          aria-label={insta ? `Instagram ${label.toLowerCase()} (nouvel onglet)` : undefined}
+          target={insta ? '_blank' : undefined}
+          rel={insta ? 'noopener' : undefined}
+        >
+          {insta && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.3" cy="6.7" r=".9" fill="currentColor" stroke="none" /></svg>
+          )}
+          {label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  /* Deux petites pastilles translucides, lisibles sur la vidéo comme sur le clair. */
+  .onglet {
+    position: fixed;
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ico {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(20 20 20 / .4);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: var(--chaux);
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .ico svg { width: 22px; height: 22px; }
+  .ico:hover { background: rgb(20 20 20 / .7); transform: scale(1.06); }
+  .ico:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+
+  /* Fenêtres */
+  .pop {
+    position: fixed;
+    inset: auto 14px calc(100px + env(safe-area-inset-bottom, 0px)) auto;
+    margin: 0;
+    width: min(280px, calc(100vw - 32px));
+    padding: 18px;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--encre);
+    color: var(--chaux);
+    font-family: var(--font-mono);
+    font-size: .875rem;
+    box-shadow: 0 12px 40px rgb(0 0 0 / .3);
+  }
+  .pop::backdrop { background: transparent; }
+  .pop p { margin: 0; }
+  .fermer {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: 400 1.5rem/1 var(--font-mono);
+    cursor: pointer;
+    opacity: .7;
+  }
+  .fermer:hover { opacity: 1; }
+
+  .margot { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .margot img, .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: none;
+  }
+  .avatar {
+    display: grid;
+    place-items: center;
+    background: var(--piste);
+    color: var(--encre);
+    font: 800 1.5rem var(--font-display);
+  }
+  .nom { font: 800 1.25rem/1.1 var(--font-display); font-variation-settings: 'wdth' 85; }
+  .numero { margin-top: 2px; white-space: nowrap; }
+  .role { opacity: .7; font-size: .8125rem; }
+  /* Bouton discret : un filet, la police mono, l'inversion au survol. */
+  .ecrire {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 11px 16px;
+    border: 1px solid var(--filet);
+    border-radius: var(--radius);
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .2s ease, color .2s ease;
+  }
+  .ecrire svg { width: 18px; height: 18px; flex: none; }
+  .ecrire:hover { background: var(--chaux); color: var(--encre); }
+
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding-block: 12px; border-top: 1px solid var(--filet); }
+  li:first-child { border-top: 0; padding-top: 4px; padding-right: 28px; }
+  li a { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+  li svg { width: 20px; height: 20px; flex: none; }
+  li a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  @media (min-width: 820px) {
+    .onglet { top: 50%; bottom: auto; right: 18px; transform: translateY(-50%); }
+    .pop { inset: 50% 72px auto auto; transform: translateY(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ico, .ecrire { transition: none; }
+  }
+</style>

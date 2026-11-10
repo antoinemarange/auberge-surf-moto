@@ -1,0 +1,35 @@
+---
+import { WHATSAPP_URL } from '../data/contact';
+
+interface Props {
+  label?: string;
+}
+
+const { label = 'Réserver sur WhatsApp' } = Astro.props;
+---
+
+<a class="btn-wa" href={WHATSAPP_URL}>
+  {label} <span class="fleche" aria-hidden="true">→</span>
+</a>
+
+<style>
+  /* Même bouton que l'accueil : filet fin, mono minuscule, sans fond, flèche qui avance au survol. */
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--filet);
+    border-radius: var(--radius);
+    color: var(--encre);
+    font-family: var(--font-mono);
+    font-size: .875rem;
+    text-transform: lowercase;
+    text-decoration: none;
+    transition: border-color .25s ease;
+  }
+  .fleche { transition: transform .25s ease; }
+  .btn-wa:hover, .btn-wa:focus-visible { border-color: currentColor; }
+  .btn-wa:hover .fleche, .btn-wa:focus-visible .fleche { transform: translateX(4px); }
+  .btn-wa:focus-visible { outline: 2px solid var(--encre); outline-offset: 3px; }
+</style>
